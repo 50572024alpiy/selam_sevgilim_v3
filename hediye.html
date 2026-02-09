@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hediyen Balım</title>
+  <style>
+    :root{
+      --bg-dark: #1C1C1C;
+      --btn-darkmint: #2E8B57;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg-dark);
+      text-align: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      color: white;
+    }
+
+    #trickyButton {
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 999px;
+      background-color: var(--btn-darkmint);
+      color: white;
+      cursor: pointer;
+      position: absolute;
+      box-shadow: 0 6px 14px rgba(0,0,0,.4);
+      transition: transform .2s ease, box-shadow .3s ease, filter .3s ease;
+    }
+    #trickyButton:hover {
+      animation: pulse 1s infinite;
+      filter: brightness(1.15);
+      box-shadow: 0 10px 20px rgba(0,0,0,.6);
+    }
+    #trickyButton:active { transform: translateY(0); }
+
+    @keyframes pulse {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      color: #ff4d6d;
+      animation: floatUp 1.5s ease forwards;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to   { opacity: 0; transform: translateY(-150px) scale(1.5); }
+    }
+
+    .back-btn {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(0,0,0,.45);
+      color: #eaf8f1;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 10px 22px rgba(0,0,0,.35);
+      z-index: 50; 
+    }
+    .back-btn:hover { filter: brightness(1.1); }
+
+    .overlay {
+      position: fixed; inset: 0;
+      display: none;
+      align-items: center; justify-content: center;
+      background:
+        radial-gradient(50% 50% at 20% 10%, rgba(255,255,255,.08), transparent 60%),
+        rgba(0,0,0,.75);
+      z-index: 9999;
+      padding: clamp(10px, 3vw, 24px);
+    }
+    .overlay.show { display: flex; }
+
+    .overlay img {
+      max-width: min(92vw, 1200px);
+      max-height: 82vh;
+      width: auto; height: auto;
+      object-fit: contain;
+      border-radius: 16px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.55);
+      background:#0e0e0e;
+    }
+
+    .overlay .back-btn { z-index: 10000; }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back-btn">← Ana menüye dön</a>
+
+  <button id="trickyButton">Tıkla Balım</button>
+
+  <div id="overlay" class="overlay" aria-hidden="true">
+    <img src="kedi.jpeg" alt="Senin için minnoş bir sürpriz ✨" id="giftImg">
+    <a href="index.html" class="back-btn">← Ana menüye dön</a>
+  </div>
+
+  <script>
+    const button   = document.getElementById("trickyButton");
+    const overlay  = document.getElementById("overlay");
+    const giftImg  = document.getElementById("giftImg");
+    let clickCount = 0;
+
+    function moveButton() {
+      const safeBottom = 80;        
+      const safeSide   = 12;
+
+      const maxX = window.innerWidth  - button.offsetWidth  - safeSide * 2;
+      const maxY = window.innerHeight - button.offsetHeight - safeBottom - 10;
+
+      const x = Math.max(safeSide, Math.floor(Math.random() * Math.max(1, maxX)) + safeSide);
+      const y = Math.max(10,        Math.floor(Math.random() * Math.max(1, maxY)) + 10);
+
+      button.style.left = `${x}px`;
+      button.style.top  = `${y}px`;
+    }
+
+    function createHeart(x, y) {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = x + "px";
+      heart.style.top  = y + "px";
+      heart.innerText = "💖";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1500);
+    }
+
+    function showOverlay() {
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden','false');
+      button.style.display = 'none';
+    }
+
+    button.addEventListener("click", (e) => {
+      clickCount++;
+      createHeart(e.clientX, e.clientY);
+
+      if (clickCount < 10) {
+        moveButton();
+      } else {
+        showOverlay();
+      }
+    });
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay || e.target === giftImg) {
+        overlay.classList.remove('show');
+        overlay.setAttribute('aria-hidden','true');
+        button.style.display = 'block';
+      }
+    });
+
+    moveButton();
+
+    window.addEventListener('resize', moveButton);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Film Araçları</title>
+
+  <link rel="stylesheet" href="auth-gate.css" />
+
+  <style>
+    :root {
+      --bg1: 15 23 42;
+      --bg2: 2 6 23;
+      --accent1: 244 114 182;
+      --accent2: 96 165 250;
+      --soft: 15 23 42 / 0.9;
+      --card-radius: 22px;
+      --shadow-lg: 0 24px 55px rgba(0, 0, 0, .6);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background:
+        radial-gradient(1200px 800px at 0% 0%, rgba(244, 114, 182, 0.12), transparent 55%),
+        radial-gradient(1000px 700px at 100% 0%, rgba(96, 165, 250, 0.16), transparent 55%),
+        linear-gradient(160deg, rgb(var(--bg1)) 0%, rgb(var(--bg2)) 100%);
+      color: #e5e7eb;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 780px;
+    }
+
+    .back-button {
+      margin-bottom: 14px;
+      background: rgba(15, 23, 42, 0.85);
+      color: #e5e7eb;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s,
+        box-shadow 0.15s;
+    }
+
+    .back-button:hover {
+      background: rgba(30, 64, 175, 0.5);
+      border-color: rgba(129, 140, 248, 0.9);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.7);
+    }
+
+    .movie-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--card-radius);
+      padding: 18px;
+      background: radial-gradient(circle at top left,
+          rgba(244, 114, 182, 0.18),
+          transparent 55%),
+        radial-gradient(circle at bottom right,
+          rgba(96, 165, 250, 0.2),
+          transparent 60%),
+        rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(18px);
+    }
+
+    .movie-header {
+      margin-bottom: 14px;
+    }
+
+    .movie-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .movie-subtitle {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    .movie-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 10px;
+    }
+
+    .movie-tab {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      padding: 6px 13px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s, transform 0.12s,
+        box-shadow 0.18s;
+      outline: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .movie-tab span.emoji {
+      font-size: 15px;
+    }
+
+    .movie-tab:hover {
+      background: rgba(30, 64, 175, 0.6);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.8);
+    }
+
+    .movie-tab.active {
+      background: linear-gradient(135deg,
+          rgb(var(--accent1)) 0%,
+          rgb(var(--accent2)) 100%);
+      color: #020617;
+      border-color: transparent;
+      box-shadow: 0 6px 24px rgba(59, 130, 246, 0.6);
+    }
+
+    .movie-panels {
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 18px 16px 16px;
+    }
+
+    .movie-panel {
+      display: none;
+    }
+
+    .movie-panel.active {
+      display: block;
+    }
+
+    .panel-desc {
+      font-size: 14px;
+      opacity: 0.9;
+      margin: 0 0 12px;
+    }
+
+    .panel-result {
+      margin-top: 18px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #f97316;
+      text-shadow: 0 0 18px rgba(249, 115, 22, 0.5);
+    }
+
+    .primary-btn,
+    .colab-button {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 22px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      background: linear-gradient(135deg,
+          rgb(var(--accent1)) 0%,
+          rgb(var(--accent2)) 100%);
+      color: #020617;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
+      transition: transform 0.18s ease, box-shadow 0.22s ease,
+        filter 0.22s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .primary-btn:hover,
+    .colab-button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 24px 44px rgba(0, 0, 0, 0.75);
+    }
+
+    .primary-btn:active,
+    .colab-button:active {
+      transform: translateY(0);
+    }
+
+    .primary-btn:focus-visible {
+      outline: 2px solid rgba(191, 219, 254, 0.8);
+      outline-offset: 2px;
+    }
+
+    .colab-button {
+      margin-top: 6px;
+    }
+
+    .panel-note {
+      margin-top: 10px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .file-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="file"] {
+      display: inline-block;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(156, 163, 175, 0.6);
+      background: rgba(15, 23, 42, 0.85);
+      color: #e5e7eb;
+      font-size: 13px;
+      max-width: 100%;
+    }
+
+    input[type="file"]::-webkit-file-upload-button,
+    input[type="file"]::file-selector-button {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      margin-right: 10px;
+      background: linear-gradient(135deg,
+          rgb(var(--accent1)) 0%,
+          rgb(var(--accent2)) 100%);
+      color: #020617;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 16px;
+      }
+
+      .movie-card {
+        padding: 14px;
+      }
+
+      .movie-panels {
+        padding: 14px 12px;
+      }
+
+      .movie-title {
+        font-size: 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-wrapper">
+    <button class="back-button" onclick="window.location.href='index.html'">
+      ← Ana sayfaya dön
+    </button>
+
+    <div class="movie-card">
+      <div class="movie-header">
+        <div class="movie-title">Film Araçları</div>
+        <div class="movie-subtitle">Tür seç, letterboxd listeni aç, filmi seçelim.</div>
+      </div>
+
+      <div class="movie-tabs">
+        <button class="movie-tab active" data-panel="genre">
+          <span class="emoji">🎭</span> Tür Seç
+        </button>
+        <button class="movie-tab" data-panel="colab">
+          <span class="emoji">📜</span> Letterboxd Liste
+        </button>
+        <button class="movie-tab" data-panel="film">
+          <span class="emoji">🎲</span> Film Seç
+        </button>
+      </div>
+
+      <div class="movie-panels">
+        <section class="movie-panel active" data-panel="genre">
+          <p class="panel-desc">
+            Hangi türden izleyelim balım?
+          </p>
+          <button id="genreButton" type="button" class="primary-btn">
+            Tür Seç Balım
+          </button>
+          <p id="genreResult" class="panel-result">Bekliyorummm</p>
+        </section>
+
+        <section class="movie-panel" data-panel="colab">
+          <p class="panel-desc">
+            Letterboxd listeni Google Colab üzerinden açıp listeyi indirebilirsin hayatım
+          </p>
+          <a class="colab-button" href="https://colab.research.google.com/drive/1sApvKEqQf1Mf9PvlYyOTH5EXCAnLzzp4"
+            target="_blank" rel="noopener noreferrer">
+            Colab'i Aç 💚
+          </a>
+        </section>
+
+        <section class="movie-panel" data-panel="film">
+          <p class="panel-desc">
+            Letterboxd listesini .txt dosyası olarak yükle balım, bizim için rastgele bir film seçsin
+          </p>
+
+          <div class="file-row">
+            <input type="file" id="fileInput" accept=".txt" />
+            <button id="filmButton" type="button" class="primary-btn">
+              Film Seç Balım
+            </button>
+          </div>
+
+          <p id="filmResult" class="panel-result">
+            Seçmeni Bekliyorum Sevgilimmm
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tabButtons = document.querySelectorAll(".movie-tab");
+    const panels = document.querySelectorAll(".movie-panel");
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.panel;
+
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        panels.forEach((p) => {
+          p.classList.toggle("active", p.dataset.panel === target);
+        });
+      });
+    });
+
+    const subGenres = [
+      "Action", "Comedy", "Drama", "Sci-Fi", "Romance", "Horror", "Thriller",
+      "Animation", "Documentary", "Adventure", "Crime", "Fantasy", "Mystery",
+      "Family", "Musical", "War", "Western", "Biography", "History", "Sport"
+    ];
+
+    const genreBtn = document.getElementById("genreButton");
+    const genreResult = document.getElementById("genreResult");
+
+    genreBtn.addEventListener("click", () => {
+      const randomIndex = Math.floor(Math.random() * subGenres.length);
+      const genre = subGenres[randomIndex];
+      genreResult.innerText = "İzleyeceğimiz Tür: " + genre;
+    });
+
+    let filmList = [];
+    let seenFilms = new Set();
+    const fileInput = document.getElementById("fileInput");
+    const filmButton = document.getElementById("filmButton");
+    const filmResult = document.getElementById("filmResult");
+
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        filmList = e.target.result
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter((line) => line !== "");
+        seenFilms.clear();
+        alert(filmList.length + " film arasından seçilecek");
+      };
+      reader.readAsText(file, "UTF-8");
+    });
+
+    filmButton.addEventListener("click", () => {
+      if (filmList.length === 0) {
+        filmResult.innerText = "Film listesi boş balım .txt dosyası yükle.";
+        return;
+      }
+
+      const availableFilms = filmList.filter(film => !seenFilms.has(film));
+
+      if (availableFilms.length === 0) {
+        filmResult.innerText = "Listendeki tüm filmleri önerdim balım! Dosyayı tekrar yükleyerek sıfırlayabilirsin.";
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * availableFilms.length);
+      const selectedFilm = availableFilms[randomIndex];
+      seenFilms.add(selectedFilm);
+
+      filmResult.innerText = `Önerim: ${selectedFilm}`;
+    });
+  </script>
+
+  <script src="auth-gate.js" defer></script>
+</body>
+
+</html>

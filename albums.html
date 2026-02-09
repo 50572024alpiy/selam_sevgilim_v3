@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Albums</title>
+  <link rel="stylesheet" href="albums.css" />
+  <link rel="stylesheet" href="auth-gate.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="head">
+      <p class="sub">❤️</p>
+
+      <div class="notes" role="group" aria-label="Notlar">
+        <button id="noteBtn1" class="note-pill" aria-expanded="false" aria-controls="noteCard1">💌</button>
+        <button id="noteBtn2" class="note-pill" aria-expanded="false" aria-controls="noteCard2">💌</button>
+      </div>
+
+      <div class="notes-cards">
+        <div id="noteCard1" class="note-card" role="dialog" aria-hidden="true">
+          <div class="note-title">❤️❤️❤️</div>
+          <p class="note-text">
+            Bu sayfa yeni bir albüm keşfetme ya da bildiğim albümlerin dinlemediğim şarkılarını bulma fikriyle ortaya çıktı, seninle paylaşmak istedim.
+          </p>
+        </div>
+
+        <div id="noteCard2" class="note-card" role="dialog" aria-hidden="true">
+          <div class="note-title">❤️❤️❤️</div>
+          <p class="note-text">
+            Albümde sevdiğim şarkıları üzerine tıklayınca görünecek şekilde ayarladım, sen de beğendiklerini benimle paylaş sevgilim.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <section id="grid" class="grid" aria-live="polite"></section>
+
+
+  </main>
+
+  <script>
+  const ALBUMS = [
+    {
+      title: "Random Access Memories",
+      artist: "Daft Punk",
+      year: 2013,
+      cover: "https://daftpunk.com/img/randomaccessmemories.jpg",
+      spotify: "https://open.spotify.com/album/4m2880jivSbbyEGAKfITCa",
+      note: "Touch, Instant Crush"
+    },
+    {
+      title: "Funk Wav Bounces Vol.1",
+      artist: "Calvin Harris",
+      year: 2017,
+      cover: "https://upload.wikimedia.org/wikipedia/en/9/9b/Funk_Wav_Bounces_1.jpg",
+      spotify: "https://open.spotify.com/intl-tr/album/2HaqChIDc5go3qxVunBDK0?si=i_YB5fx0QsySG7Arh6XrlQ",
+      note: "Slide, Rollin, Feels"
+    },
+    {
+      title: "Yineleme",
+      artist: "Jabbar",
+      year: 2018,
+      cover: "https://cdn-images.dzcdn.net/images/cover/5de68b62648673c6e345abdd9c60080c/500x500-000000-80-0-0.jpg",
+      spotify: "https://open.spotify.com/intl-tr/album/0BWmz7idU4DyD2MENZiwB3?si=iZXXJt7fTbmuGzBMl549zQ",
+      note: "Cesaretsizce Olmuyor, Aşksın, Raf, Geçmiş Değişmez"
+    },
+    {
+      title: "On",
+      artist: "Bedük",
+      year: 2013,
+      cover: "https://lh3.googleusercontent.com/9Lq_HkoLT44MwdpdHJA1AJg2EfNuGHbud2SkcscV-7kUIS4-ZhtdTY0DAyjf9BTtyZMnoHS6M3kcKc3UDw=w544-h544-l90-rj",
+      spotify: "https://open.spotify.com/intl-tr/album/4cjSCYEC0AaiXYxVJNxCpS?si=Ch06GBm5QOab5-XXsIP0zg",
+      note: "Herkes Güzel, Fanus"
+    },
+    {
+      title: "Continuum",
+      artist: "John Mayer",
+      year: 2006,
+      cover: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Continuum_by_John_Mayer_%282006%29.jpg",
+      spotify: "https://open.spotify.com/intl-tr/album/1Xsprdt1q9rOzTic7b9zYM?si=N7h7NR19QQ27kXUhDnUxmQ",
+      note: "Gravity, Slow Dancing in a Burning Room"
+    },
+    {
+      title: "Currents",
+      artist: "Tame Impala",
+      year: 2015,
+      cover: "https://is1-ssl.mzstatic.com/image/thumb/Video116/v4/b8/7f/5d/b87f5dc2-d047-dd46-7aa5-8c65605f23f6/Job74b4a5ff-5be8-4c56-a1a8-3958c5885e8d-128370359-PreviewImage_preview_image_nonvideo_sdr-Time1643827412445.png/316x316bb.webp",
+      spotify: "https://open.spotify.com/intl-tr/album/79dL7FLiJFOO0EoehUHQBv?si=z-Yh2gAsQe6Gi4Pb8eEm0Q",
+      note: "'Let it Happen', 'The Less I Know The Better', 'New Person, Same Old Mistakes'"
+    },
+    {
+      title: "Spider-Man: Into the Spider-Verse Soundtracks",
+      artist: "-",
+      year: 2018,
+      cover: "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/65/28/ad/6528ad6c-cfeb-fb08-ea85-b19c4612ab08/18UMGIM82277.rgb.jpg/632x632bb.webp",
+      spotify: "https://open.spotify.com/intl-tr/album/3pOj4mmxL5MUwR1IR8LPzL?si=D4XxlzJXS6-39SBSnIOWBw",
+      note: "Sunflower, Hide, Memories, Invincible"
+    },
+    {
+      title: "Black Panther: The Album",
+      artist: "Kendrick Lamar",
+      year: 2018,
+      cover: "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/4d/16/55/4d165549-3d11-86dc-fcbf-be7fe0bcadfb/18UMGIM00002.rgb.jpg/632x632bb.webp",
+      spotify: "https://open.spotify.com/intl-tr/album/3pLdWdkj83EYfDN6H2N8MR?si=xsJw0-F7RR-bi0FGaZGB9Q",
+      note: "Seasons, I Am, The Ways, All The Stars"
+    },
+    {
+      title: "Bi Dans Etsek",
+      artist: "Bedük",
+      year: 2015,
+      cover: "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/2e/dd/ed/2edded2d-eecf-bfa9-5a0e-33191b637cf5/3614595532708_1.jpg/316x316bb.webp",
+      spotify: "https://open.spotify.com/intl-tr/album/6IZNwqHx89vXjsLGfjcg9k?si=vtNau20dRWu8NN1r6sj8HQ",
+      note: "Bi Dans Etsek, Camdan Hikayeler, Beraber"
+    },
+    {
+      title: "Manic",
+      artist: "Halsey",
+      year: 2020,
+      cover: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/2d/22/b3/2d22b3a8-2666-d609-443f-dc6e348c7ef6/19UMGIM75011.rgb.jpg/316x316bb.webp",
+      spotify: "https://open.spotify.com/intl-tr/album/1hlapolkCnQLMgKcKNVCuc?si=MrC90lELTaaFmwrpm7I2pQ",
+      note: "Be Kind, Without Me, Graveyard, You should be sad, 3am"
+    },
+    {
+      title: "HEROES & VILLIANS",
+      artist: "Metro Boomin",
+      year: 2022,
+      cover: "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/73/1b/a9/731ba9ea-ad8f-3a60-2fdd-39c04ab0588d/22UM1IM40166.rgb.jpg/316x316bb.webp",
+      spotify: "https://open.spotify.com/intl-tr/album/2yEKP9l5fT3Y7RwM1QIqWl?si=Zk2OtECPTK-1gjNFgsK_TA",
+      note: "Creepin, Trance, Too Many Nights, Superhero, On Time"
+    },
+    {
+      title: "SPIDER-MAN: ACROSS THE SPIDER-VERSE Soundtracks",
+      artist: "Metro Boomin",
+      year: 2023,
+      cover: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/43/3b/ed/433bedaf-fcb0-9c11-cb11-b24d90df7e21/23UMGIM64367.rgb.jpg/316x316bb.webp",
+      spotify: "https://open.spotify.com/intl-tr/album/4ocB97o3gdrIYyIwYSSwVy?si=kBKUDZQQRs6GqPvpr_dF1Q",
+      note: "Am I Dreaming, Calling, Self Love"
+    },
+  ];
+
+  const grid = document.getElementById("grid");
+
+  function itemTemplate(a){
+    return `
+    <article class="item">
+      <h3 class="top-title">${a.title}</h3>
+
+      <div class="card">
+        <div class="face face-front">
+          <img class="cover-img"
+               src="${a.cover}"
+               alt="${a.title} kapak"
+               onerror="this.src='images/placeholder-cover.png'">
+        </div>
+
+        <div class="face face-panel">
+          <h4>${a.title}</h4>
+          <p class="meta">${a.artist} • ${a.year}</p>
+          <p class="note">${a.note || ""}</p>
+          <div class="actions">
+            <a class="btn btn-spotify" href="${a.spotify}" target="_blank" rel="noopener">Spotify’da Dinle</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="bottom-meta">${a.artist} • ${a.year}</p>
+    </article>`;
+  }
+
+  function mount(){
+    grid.innerHTML = ALBUMS.map(itemTemplate).join("");
+    grid.querySelectorAll(".card").forEach(card=>{
+      card.addEventListener("click",()=>card.classList.toggle("open"));
+      card.querySelectorAll(".btn").forEach(btn=>{
+        btn.addEventListener("click",e=>e.stopPropagation());
+      });
+    });
+  }
+  mount();
+
+  function bindNote(btnId, cardId){
+    const btn  = document.getElementById(btnId);
+    const card = document.getElementById(cardId);
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const willOpen = !card.classList.contains("show");
+      document.querySelectorAll(".note-card.show").forEach(el=>{
+        el.classList.remove("show");
+        el.setAttribute("aria-hidden","true");
+        const b = document.querySelector(`[aria-controls="${el.id}"]`);
+        if(b) b.setAttribute("aria-expanded","false");
+      });
+      card.classList.toggle("show", willOpen);
+      card.setAttribute("aria-hidden", String(!willOpen));
+      btn.setAttribute("aria-expanded", String(willOpen));
+    });
+  }
+
+  bindNote("noteBtn1","noteCard1");
+  bindNote("noteBtn2","noteCard2");
+
+  document.addEventListener("click", ()=>{
+    document.querySelectorAll(".note-card.show").forEach(el=>{
+      el.classList.remove("show");
+      el.setAttribute("aria-hidden","true");
+      const b = document.querySelector(`[aria-controls="${el.id}"]`);
+      if(b) b.setAttribute("aria-expanded","false");
+    });
+  });
+  document.addEventListener("keydown", e=>{
+    if(e.key === "Escape"){
+      document.querySelectorAll(".note-card.show").forEach(el=>{
+        el.classList.remove("show");
+        el.setAttribute("aria-hidden","true");
+        const b = document.querySelector(`[aria-controls="${el.id}"]`);
+        if(b) b.setAttribute("aria-expanded","false");
+      });
+    }
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="stylesheet" href="spotify-random.css">
+  <title>Random Song</title>
+</head>
+<body>
+  <main class="wrap">
+    <header class="head">
+      <h1>Rastgele Şarkı</h1>
+      <p class="sub">Senin için oluşturduğum playlistten bir şarkı seç sevgilim</p>
+      <p class="sub"> (Çoğunu dinlemediğini düşündüğüm şarkılardan seçmek istedim umarım becerebilmişimdir)</p>
+    </header>
+
+    <section class="panel">
+      <div class="actions">
+        <button id="pickBtn" class="btn btn-primary">Şarkı Seç</button>
+      </div>
+
+      <div id="result" class="result">
+        <div class="placeholder">Henüz bir şarkı önerilmedi balım.</div>
+      </div>
+
+      <div id="previous" class="previous">
+        <div class="prev-title">Önceki şarkı yok.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  (function(){
+    const TRACKS_RAW = [
+      "https://open.spotify.com/intl-tr/track/7DMPq3XndRJaj6NTINsLOz?si=dfe96d5e7d5f49fb",
+      "https://open.spotify.com/intl-tr/track/4VgGQi9FZMrNG4MuiONldI?si=67dde07e084e4b18",
+      "https://open.spotify.com/intl-tr/track/7FwAHcbyY0eiCw09SwYYyf?si=6ee6de3c24154c39",
+      "https://open.spotify.com/intl-tr/track/5Mk1tgVrSuoWWwPVFNS0jB?si=415139c192b74a2f",
+      "https://open.spotify.com/intl-tr/track/0cLrnNe3m36WTcXBEFCSCh?si=c48025c5f38840ec",
+      "https://open.spotify.com/intl-tr/track/3X3mfRMRaPJRiIMDMQtSkd?si=3d3cfa6538ca45b0",
+      "https://open.spotify.com/intl-tr/track/2gRLsIZ7iYYbGVpIYK5idR?si=683ba0335af146a7",
+      "https://open.spotify.com/intl-tr/track/1WJdwvIGZugV1Zp0uF8h9k?si=548ad7584cc44bcc",
+      "https://open.spotify.com/intl-tr/track/7zzoxJbgjme3366mOp5UnH?si=b1cc419fd52748ed",
+      "https://open.spotify.com/intl-tr/track/2INYbcxP73Z3zgOzJvAxqR?si=880e993eff3c4740",
+      "https://open.spotify.com/intl-tr/track/7g3g00RKlqSIe2G8KKCgsE?si=5025de16a2f946a0",
+      "https://open.spotify.com/intl-tr/track/2bhQAgmfdjD9Cl6CByamus?si=0d82dc9709aa4f6a",
+      "https://open.spotify.com/intl-tr/track/2MaUwANhrU6KF8AK71ezsX?si=c611f1d82cac4da5",
+      "https://open.spotify.com/intl-tr/track/7i4hAFqaMcw12ITAKtLyQb?si=bb4e900546514b16",
+      "https://open.spotify.com/intl-tr/track/07gMqj1EIGe4LZqkgHpnC1?si=fa81c55ad60043d1",
+      "https://open.spotify.com/intl-tr/track/6tEFmKVrMoaUYDHsPWOfRz?si=b02a46a08c5d4b8e",
+      "https://open.spotify.com/intl-tr/track/65NgzrJQYejo06ddrg8tbp?si=9a9cad3c653d4d0e",
+      "https://open.spotify.com/intl-tr/track/7GdwIsiVLKrsvwFsdBK9Cy?si=902a7ab96a48445e",
+      "https://open.spotify.com/intl-tr/track/0ElpbbncWT9aS7mgoqEHbQ?si=afe4c7fe465e4109",
+      "https://open.spotify.com/intl-tr/track/6XJGpirOP4Bgurcvkdanxb?si=71834a3774754ea2",
+      "https://open.spotify.com/intl-tr/track/7mKOZwMjlVAyrTEqOBS9LY?si=5debe06f98b741c7",
+      "https://open.spotify.com/intl-tr/track/3QcBWmkrJMpVw45cbyQY9I?si=96f6a560d0cc4f6a",
+      "https://open.spotify.com/intl-tr/track/1zSzJAosfqJugLx7mZl5xt?si=95e502eb6b2f43ad",
+      "https://open.spotify.com/intl-tr/track/3eiTlfmClIHJS7Vq4IwkBZ?si=c7edd5855bc54d8c",
+      "https://open.spotify.com/intl-tr/track/2cSReP67LziR3PeYQ8Ehm2?si=176a937907f04217",
+      "https://open.spotify.com/intl-tr/track/0Pm9YndkLumbVZ1HhaezUr?si=6e466def17274be3",
+      "https://open.spotify.com/intl-tr/track/72SPsHheqN6J3sI520jT9E?si=900399813c80438e",
+      "https://open.spotify.com/intl-tr/track/7oHCMx8VBJ4t9EpEcZzw1c?si=cf110cc2822b4f54",
+      "https://open.spotify.com/intl-tr/track/06kmBfWgeYCNynm6g4nGDh?si=c153415edfe847f7",
+      "https://open.spotify.com/intl-tr/track/44alNkXsYnTyPnkMdohBcx?si=82fd084d4b354c0f",
+      "https://open.spotify.com/intl-tr/track/5eG8QuQKOBvDeCyoOeMkhT?si=80e744df65ff4c4d",
+      "https://open.spotify.com/intl-tr/track/5eG8QuQKOBvDeCyoOeMkhT?si=81aa53f625794d2c",
+      "https://open.spotify.com/intl-tr/track/5Djt1AQnhfhYJjs4m7WS6G?si=1cd89d5fc93e4a88",
+      "https://open.spotify.com/intl-tr/track/4YAHUhyTzxbA5BkMTbvKqb?si=24e7299b24d743aa",
+      "https://open.spotify.com/intl-tr/track/6zeE5tKyr8Nu882DQhhSQI?si=2e725c46badd4e73",
+      "https://open.spotify.com/intl-tr/track/2CSRrnOEELmhpq8iaAi9cd?si=89e6bb4c06c84ee8",
+      "https://open.spotify.com/intl-tr/track/2qPSa6HXjzwa9sLhNGpA1T?si=6b0cedbca65040cc",
+      "https://open.spotify.com/intl-tr/track/5e5XSjfqBk4mgRnQR1vu8Z?si=74c13fded6ca4320",
+      "https://open.spotify.com/intl-tr/track/58wyJLv6yH1La9NIZPl3ne?si=ec431a17feef4225",
+      "https://open.spotify.com/intl-tr/track/1Fid2jjqsHViMX6xNH70hE?si=ba2e62344976443c",
+      "https://open.spotify.com/intl-tr/track/6h6jpIeK8bZvVwKT4edHYi?si=5c4553e19d784eba",
+      "https://open.spotify.com/intl-tr/track/4ZLzoOkj0MPWrTLvooIuaa?si=831dac754750445d",
+      "https://open.spotify.com/intl-tr/track/1ZgMsA55GIY7ICkQh5MILA?si=711b529ea8784ce7",
+      "https://open.spotify.com/intl-tr/track/0K08V3QlZporxrJf8FIZ8M?si=46943ee72f054e08",
+      "https://open.spotify.com/intl-tr/track/4IhKLu7Vk3j2TLmnFPl6To?si=5bb23ef305064c56",
+      "https://open.spotify.com/intl-tr/track/7eJMfftS33KTjuF7lTsMCx?si=c72024caedfc493d",
+      "https://open.spotify.com/intl-tr/track/7Lg4dEz9IVE5iUILPEdyUv?si=7256dc0e71d645ac",
+      "https://open.spotify.com/intl-tr/track/7qH9Z4dJEN0l9bidizW7fq?si=0a33c565d7314869",
+      "https://open.spotify.com/intl-tr/track/7CoMBpPTwQi2wPT0U0Nr9b?si=b9f4363127e7483b",
+      "https://open.spotify.com/intl-tr/track/3ieUtb4ecQgEYxae8dzEUi?si=b2b78a40864845ac",
+      "https://open.spotify.com/intl-tr/track/2jdAk8ATWIL3dwT47XpRfu?si=7cee3e3110fc462d",
+      "https://open.spotify.com/intl-tr/track/45I0cFWvCXJg1HUYNcwIF6?si=6d1a2e59fa484be1",
+      "https://open.spotify.com/intl-tr/track/4ABWPP59ItFKykdaDF09K5?si=1600688c8cae42a2"
+
+
+
+
+    ];
+
+    const EMBED_HEIGHT = 352;
+    const $ = s => document.querySelector(s);
+    const pickBtn = $('#pickBtn'), result = $('#result'), prevBox = $('#previous');
+
+    function normalizeId(s){
+      if(!s) return "";
+      s = s.trim();
+      let m;
+      m = s.match(/spotify:track:([0-9A-Za-z]{22})/i); if(m) return m[1];
+      m = s.match(/open\.spotify\.com\/(?:intl-[a-z-]+\/)?track\/([0-9A-Za-z]{22})/i); if(m) return m[1];
+      m = s.match(/^([0-9A-Za-z]{22})$/); if(m) return m[1];
+      return "";
+    }
+    const TRACKS = TRACKS_RAW.map(normalizeId).filter(Boolean);
+
+    function shuffleArray(array){
+      let a = [...array];
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    let shuffled = shuffleArray(TRACKS);
+    let index = 0;
+    let lastId = null;
+
+    function renderEmbed(id){
+      result.innerHTML = `
+        <div class="embed-wrap">
+          <iframe
+            src="https://open.spotify.com/embed/track/${id}?utm_source=generator"
+            width="100%" height="${EMBED_HEIGHT}" frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"></iframe>
+        </div>`;
+    }
+
+    function renderPrevious(id){
+      if(!id){
+        prevBox.innerHTML = `<div class="prev-title">Önceki şarkı yok.</div>`;
+        return;
+      }
+      prevBox.innerHTML = `
+        <div class="prev-title">Önceki şarkı:</div>
+        <div class="prev-card">
+          <iframe
+            src="https://open.spotify.com/embed/track/${id}?utm_source=generator"
+            frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"></iframe>
+        </div>`;
+    }
+
+    function pickRandom(){
+      if(!shuffled.length) return;
+
+      const id = shuffled[index];
+
+      renderPrevious(lastId);
+
+      renderEmbed(id);
+
+      lastId = id;
+      index++;
+
+      if(index >= shuffled.length){
+        shuffled = shuffleArray(TRACKS); 
+        index = 0;
+      }
+    }
+
+    pickBtn.addEventListener('click', pickRandom);
+  })();
+  </script>
+</body>
+</html>

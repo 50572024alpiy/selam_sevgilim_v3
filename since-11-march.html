@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geçen Süremiz</title>
+  <link rel="stylesheet" href="since-11-march.css" />
+  <link rel="stylesheet" href="auth-gate.css">
+</head>
+
+<body>
+  <a href="index.html"
+    style="position: absolute; top: 30px; left: 30px; font-size: 16px; font-weight: 600; color: rgb(var(--ui-mint)); text-decoration: none; z-index: 100; opacity: 0.8; transition: all 0.2s; display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 10px 16px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1);"
+    onmouseover="this.style.opacity=1; this.style.transform='translateX(-2px)'"
+    onmouseout="this.style.opacity=0.8; this.style.transform='none'" aria-label="Ana Menüye Dön">← Ana Menüye Dön</a>
+
+  <main class="panel">
+    <h1>∞</h1>
+    <p class="lead">Birlikte geçen süremiz:</p>
+
+    <section class="time-grid" aria-live="polite">
+      <div class="tile">
+        <div id="years" class="value">0</div>
+        <div class="label">Yıl</div>
+      </div>
+      <div class="tile">
+        <div id="months" class="value">0</div>
+        <div class="label">Ay</div>
+      </div>
+      <div class="tile">
+        <div id="days" class="value">0</div>
+        <div class="label">Gün</div>
+      </div>
+      <div class="tile">
+        <div id="hours" class="value">0</div>
+        <div class="label">Saat</div>
+      </div>
+      <div class="tile">
+        <div id="minutes" class="value">0</div>
+        <div class="label">Dakika</div>
+      </div>
+      <div class="tile">
+        <div id="seconds" class="value">0</div>
+        <div class="label">Saniye</div>
+      </div>
+    </section>
+
+    <p class="since">
+      <time datetime="2025-03-11T00:00:00">11 Mart 2025</time>
+    </p>
+  </main>
+
+  <script>
+    const START = new Date(2025, 2, 11, 0, 0, 0);
+
+    function setValue(selector, value) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      if (el.textContent !== String(value)) {
+        el.textContent = value;
+        const tile = el.parentElement;
+        tile.classList.add("tick");
+        setTimeout(() => tile.classList.remove("tick"), 220);
+      }
+    }
+
+    function updateTime() {
+      const now = new Date();
+
+      let years = now.getFullYear() - START.getFullYear();
+      let months = now.getMonth() - START.getMonth();
+      let days = now.getDate() - START.getDate();
+      let hours = now.getHours() - START.getHours();
+      let minutes = now.getMinutes() - START.getMinutes();
+      let seconds = now.getSeconds() - START.getSeconds();
+
+      if (seconds < 0) { seconds += 60; minutes--; }
+      if (minutes < 0) { minutes += 60; hours--; }
+      if (hours < 0) { hours += 24; days--; }
+
+      if (days < 0) {
+        const prevMonthDays = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+        days += prevMonthDays;
+        months--;
+      }
+      if (months < 0) { months += 12; years--; }
+
+      setValue("#years", years);
+      setValue("#months", months);
+      setValue("#days", days);
+      setValue("#hours", hours);
+      setValue("#minutes", minutes.toString().padStart(2, "0"));
+      setValue("#seconds", seconds.toString().padStart(2, "0"));
+
+      document.title = `${years}y ${months}a ${days}g ${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} • Birlikte`;
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+  </script>
+  <script src="auth-gate.js" defer></script>
+</body>
+
+</html>

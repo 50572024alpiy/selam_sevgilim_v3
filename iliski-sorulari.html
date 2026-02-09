@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlişki Soruları</title>
+    <link rel="stylesheet" href="auth-gate.css">
+    <link rel="stylesheet" href="relationship-cards.css">
+</head>
+
+<body class="relationship-page">
+    <a href="index.html" class="home-link" aria-label="Ana Menüye Dön">← Ana Menü</a>
+
+    <div class="page-container">
+        <div class="card-stack-container">
+
+            <!-- Card 1 -->
+            <div class="question-card" style="--i:0">
+                <h2 class="card-title">İlişki Soruları</h2>
+                <div class="card-decoration"></div>
+                <p class="card-question">Ben diyince aklına gelen şarkı/şarkılar ?</p>
+                <div class="card-decoration"></div>
+                <div class="tap-hint">Diğer Soru İçin Dokun</div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="question-card" style="--i:1">
+                <h2 class="card-title">İlişki Soruları</h2>
+                <div class="card-decoration"></div>
+                <p class="card-question">Ben deyince aklına gelen renk ?</p>
+                <div class="card-decoration"></div>
+                <div class="tap-hint">Diğer Soru İçin Dokun</div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="question-card" style="--i:2">
+                <h2 class="card-title">İlişki Soruları</h2>
+                <div class="card-decoration"></div>
+                <p class="card-question">Birlikte gitsek dediğin tatil yeri neresi?</p>
+                <div class="card-decoration"></div>
+                <div class="tap-hint">Diğer Soru İçin Dokun</div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="question-card" style="--i:3">
+                <h2 class="card-title">İlişki Soruları</h2>
+                <div class="card-decoration"></div>
+                <p class="card-question">Ben deyince aklına gelen film/dizi hangisi?</p>
+                <div class="card-decoration"></div>
+                <div class="tap-hint">Diğer Soru İçin Dokun</div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="question-card" style="--i:4">
+                <h2 class="card-title">İlişki Soruları</h2>
+                <div class="card-decoration"></div>
+                <p class="card-question">Biz deyince aklına gelen şarkı hangisi?</p>
+                <div class="card-decoration"></div>
+                <div class="tap-hint">Diğer Soru İçin Dokun</div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="question-card" style="--i:5">
+                <h2 class="card-title">İlişki Soruları</h2>
+                <div class="card-decoration"></div>
+                <p class="card-question">Ben deyince aklına gelen çiçek hangisi? (Kasımpatı hariç)</p>
+                <div class="card-decoration"></div>
+                <div class="tap-hint">Diğer Soru İçin Dokun</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth-gate.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.card-stack-container');
+            const cards = Array.from(document.querySelectorAll('.question-card'));
+
+            cards.forEach((card, index) => {
+                card.style.zIndex = cards.length - index;
+                card.addEventListener('click', () => {
+                    card.classList.add('slide-out');
+
+                    setTimeout(() => {
+                        container.appendChild(card);
+                        card.classList.remove('slide-out');
+                        resetZIndices();
+                    }, 500);
+                });
+            });
+
+            function resetZIndices() {
+                const currentCards = document.querySelectorAll('.question-card');
+                currentCards.forEach((card, index) => {
+                    card.style.zIndex = currentCards.length - index;
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

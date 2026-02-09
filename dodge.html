@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="tr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mini Dodge</title>
+  <style>
+    :root {
+      --bg0: #070A12;
+      --bg2: #0B1022;
+      --text: rgba(255, 255, 255, .92);
+      --muted: rgba(255, 255, 255, .68);
+      --glass1: rgba(255, 255, 255, .08);
+      --glass2: rgba(255, 255, 255, .05);
+      --stroke: rgba(255, 255, 255, .12);
+      --accent: 255, 77, 166;
+      --accent2: 120, 110, 255;
+      --radius: 22px;
+      --shadow: 0 22px 70px rgba(0, 0, 0, .52);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(900px 560px at 14% 8%, rgba(var(--accent), .22), transparent 56%),
+        radial-gradient(920px 560px at 92% 22%, rgba(var(--accent2), .20), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    .panel {
+      width: min(980px, 100%);
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, var(--glass1), var(--glass2));
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background:
+        radial-gradient(520px 240px at 14% 0%, rgba(var(--accent), .22), transparent 62%),
+        radial-gradient(520px 240px at 90% 120%, rgba(var(--accent2), .18), transparent 62%);
+      filter: blur(10px);
+      opacity: .9;
+      pointer-events: none;
+    }
+
+    header {
+      position: relative;
+      padding: 18px 18px 14px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    .title {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 220px
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 860;
+      letter-spacing: .2px
+    }
+
+    .title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, .16);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 760;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      user-select: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, .09);
+      border-color: rgba(255, 255, 255, .22);
+    }
+
+    .btn:active {
+      transform: translateY(0px) scale(.99);
+    }
+
+    .btn.primary {
+      border-color: rgba(var(--accent), .38);
+      background: linear-gradient(180deg, rgba(var(--accent), .20), rgba(var(--accent2), .11));
+    }
+
+    .content {
+      position: relative;
+      padding: 16px 18px 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 660px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 16px;
+      padding: 10px 12px;
+    }
+
+    .stat .k {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .stat .v {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+
+    .gameShell {
+      background: rgba(0, 0, 0, .20);
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 20px;
+      padding: 12px;
+    }
+
+    canvas {
+      width: 100%;
+      height: clamp(320px, 46vw, 520px);
+      display: block;
+      border-radius: 16px;
+      background:
+        radial-gradient(760px 260px at 50% 15%, rgba(255, 255, 255, .07), transparent 60%),
+        linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .02));
+      border: 1px solid rgba(255, 255, 255, .08);
+      touch-action: none;
+    }
+
+    .bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .06);
+      font-size: 12px;
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .toast {
+      position: absolute;
+      right: 24px;
+      top: 90px;
+      max-width: min(520px, calc(100% - 36px));
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(0, 0, 0, .28);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.35;
+      display: none;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .toast.show {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="panel">
+    <header>
+      <div class="title">
+        <h1>Mini Dodge</h1>
+      </div>
+      <div class="actions">
+        <a class="btn" href="index.html">← Ana menü</a>
+        <button class="btn" id="pauseBtn">⏸ Duraklat</button>
+        <button class="btn primary" id="restartBtn">⟲ Yeniden</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="stats">
+        <div class="stat">
+          <div class="k">Skor</div>
+          <div class="v" id="score">0</div>
+        </div>
+        <div class="stat">
+          <div class="k">En İyi</div>
+          <div class="v" id="best">—</div>
+        </div>
+        <div class="stat">
+          <div class="k">Seviye</div>
+          <div class="v" id="level">1</div>
+        </div>
+      </div>
+
+      <div class="gameShell">
+        <canvas id="c" aria-label="Mini Dodge canvas"></canvas>
+      </div>
+
+      <div class="bar">
+        <div class="chips">
+          <span class="chip">⌨️ ← → / A D</span>
+          <span class="chip">📱 Basılı tut & sürükle</span>
+          <span class="chip">␣ Space: Duraklat</span>
+        </div>
+        <span class="chip">💖 Bonus topla • 💔 Çarpma</span>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </div>
+  </section>
+
+  <script>
+    const canvas = document.getElementById("c");
+    const ctx = canvas.getContext("2d");
+
+    const scoreEl = document.getElementById("score");
+    const bestEl = document.getElementById("best");
+    const levelEl = document.getElementById("level");
+    const toastEl = document.getElementById("toast");
+
+    const pauseBtn = document.getElementById("pauseBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const BEST_KEY = "dodge_best_v2";
+
+    const BAD_EMOJIS = ["💔", "🖤", "🥀"];
+    const GOOD_EMOJIS = ["💖", "💘", "💝", "🌹", "🎀", "💌", "✨", "💎", "🍓", "🧸"];
+
+    let dpr = Math.max(1, window.devicePixelRatio || 1);
+    let W = 800, H = 460;
+
+    const player = {
+      x: 200,
+      y: 360,
+      r: 18,
+      speed: 520,
+    };
+
+    let objects = [];
+    let spawnTimer = 0;
+
+    let running = false;
+    let paused = false;
+    let gameOver = false;
+
+    let score = 0;
+    let level = 1;
+    let timeAlive = 0;
+
+    let left = false, right = false;
+    let pointerDown = false;
+    let pointerOffsetX = 0;
+
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+    function rnd(a, b) { return a + Math.random() * (b - a); }
+
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toastEl.classList.remove("show"), 1800);
+    }
+
+    function loadBest() {
+      const v = localStorage.getItem(BEST_KEY);
+      bestEl.textContent = v ? v : "—";
+    }
+
+    function saveBestIfNeeded() {
+      const current = Math.floor(score);
+      const prev = localStorage.getItem(BEST_KEY);
+      const prevScore = prev ? parseInt(prev, 10) : null;
+      if (!prevScore || current > prevScore) {
+        localStorage.setItem(BEST_KEY, String(current));
+        loadBest();
+        showToast("Yeni rekor! ✨");
+      }
+    }
+
+
+
+    function resizeCanvas() {
+      dpr = Math.max(1, window.devicePixelRatio || 1);
+      const rect = canvas.getBoundingClientRect();
+
+      W = Math.max(320, rect.width);
+      H = Math.max(260, rect.height);
+
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      player.y = H - 78;
+      player.x = clamp(player.x, player.r + 12, W - player.r - 12);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+
+    function reset() {
+      objects = [];
+      spawnTimer = 0;
+      score = 0;
+      level = 1;
+      timeAlive = 0;
+
+      running = true;
+      paused = false;
+      gameOver = false;
+
+      player.x = W / 2;
+      player.y = H - 78;
+
+      scoreEl.textContent = "0";
+      levelEl.textContent = "1";
+      pauseBtn.textContent = "⏸ Duraklat";
+      showToast("Başla! 💖");
+    }
+
+    function togglePause() {
+      if (!running || gameOver) return;
+      paused = !paused;
+      pauseBtn.textContent = paused ? "▶ Devam" : "⏸ Duraklat";
+    }
+
+    function endGame() {
+      gameOver = true;
+      running = false;
+      paused = false;
+      pauseBtn.textContent = "⏸ Duraklat";
+      saveBestIfNeeded();
+      showToast("Çarptın! ⟲ Yeniden dene");
+    }
+
+    function spawn() {
+      const bonusChance = clamp(0.12 + level * 0.01, 0.12, 0.22);
+      const isGood = Math.random() < bonusChance;
+
+      const r = isGood ? rnd(14, 22) : rnd(16, 26);
+      const x = rnd(r + 14, W - r - 14);
+      const y = -r - 10;
+
+      const speedBase = 180 + level * 26;
+      const vy = (isGood ? 0.88 : 1.05) * (speedBase + rnd(0, 90));
+
+      const emoji = isGood
+        ? GOOD_EMOJIS[Math.floor(Math.random() * GOOD_EMOJIS.length)]
+        : BAD_EMOJIS[Math.floor(Math.random() * BAD_EMOJIS.length)];
+
+      objects.push({
+        x, y, r, vy,
+        emoji,
+        type: isGood ? "good" : "bad",
+        rot: rnd(-0.35, 0.35),
+        spin: rnd(-0.9, 0.9),
+      });
+    }
+
+    function dist2(ax, ay, bx, by) {
+      const dx = ax - bx, dy = ay - by;
+      return dx * dx + dy * dy;
+    }
+
+    function update(dt) {
+      if (!running || paused || gameOver) return;
+
+      timeAlive += dt;
+
+      score += dt * (12 + level * 2.4);
+      scoreEl.textContent = String(Math.floor(score));
+
+      const newLevel = 1 + Math.floor(timeAlive / 9);
+      if (newLevel !== level) {
+        level = newLevel;
+        levelEl.textContent = String(level);
+      }
+
+      const dir = (right ? 1 : 0) - (left ? 1 : 0);
+      player.x += dir * player.speed * dt;
+      player.x = clamp(player.x, player.r + 12, W - player.r - 12);
+
+      const spawnInterval = clamp(0.82 - level * 0.055, 0.16, 0.82);
+      spawnTimer += dt;
+      while (spawnTimer >= spawnInterval) {
+        spawnTimer -= spawnInterval;
+        spawn();
+      }
+
+      for (const o of objects) {
+        o.y += o.vy * dt;
+        o.rot += o.spin * dt;
+      }
+      objects = objects.filter(o => o.y < H + 120);
+
+      for (let i = objects.length - 1; i >= 0; i--) {
+        const o = objects[i];
+        const rr = (player.r + o.r) * 0.90;
+        if (dist2(player.x, player.y, o.x, o.y) < rr * rr) {
+          if (o.type === "bad") {
+            endGame();
+            break;
+          } else {
+            const add = Math.floor(70 + level * 8);
+            score += add;
+            scoreEl.textContent = String(Math.floor(score));
+            showToast(`${o.emoji} +${add}`);
+            objects.splice(i, 1);
+          }
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      const vg = ctx.createRadialGradient(W * 0.5, H * 0.25, 10, W * 0.5, H * 0.5, Math.max(W, H) * 0.75);
+      vg.addColorStop(0, "rgba(255,255,255,0.06)");
+      vg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = vg;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.strokeStyle = "rgba(255,255,255,0.10)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(14, H - 40);
+      ctx.lineTo(W - 14, H - 40);
+      ctx.stroke();
+
+      for (const o of objects) {
+        drawOrb(o.x, o.y, o.r, o.type);
+        drawEmoji(o.x, o.y, o.r, o.emoji, o.rot);
+      }
+
+      drawOrb(player.x, player.y, player.r, "player");
+      drawEmoji(player.x, player.y, player.r, "💗", 0);
+
+      if (!running && !gameOver) overlay("Başlamak için dokun / tıkla");
+      else if (paused) overlay("Duraklatıldı");
+      else if (gameOver) overlay("Bitti — Yeniden başlat");
+    }
+
+    function drawOrb(x, y, r, type) {
+      ctx.save();
+
+      ctx.shadowColor = "rgba(0,0,0,0.35)";
+      ctx.shadowBlur = 18;
+      ctx.fillStyle = "rgba(0,0,0,0.20)";
+      ctx.beginPath();
+      ctx.arc(x + 2, y + 4, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.shadowBlur = 22;
+      if (type === "player") ctx.shadowColor = "rgba(255,77,166,0.28)";
+      else if (type === "good") ctx.shadowColor = "rgba(255,255,255,0.18)";
+      else ctx.shadowColor = "rgba(120,110,255,0.20)";
+
+      const grad = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.2, x, y, r * 1.25);
+      if (type === "player") {
+        grad.addColorStop(0, "rgba(255,255,255,0.16)");
+        grad.addColorStop(0.45, "rgba(255,77,166,0.22)");
+        grad.addColorStop(1, "rgba(255,255,255,0.06)");
+      } else if (type === "good") {
+        grad.addColorStop(0, "rgba(255,255,255,0.14)");
+        grad.addColorStop(0.55, "rgba(255,77,166,0.10)");
+        grad.addColorStop(1, "rgba(255,255,255,0.05)");
+      } else {
+        grad.addColorStop(0, "rgba(255,255,255,0.10)");
+        grad.addColorStop(0.55, "rgba(120,110,255,0.11)");
+        grad.addColorStop(1, "rgba(255,255,255,0.04)");
+      }
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = "rgba(255,255,255,0.14)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function drawEmoji(x, y, r, emoji, rot) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rot || 0);
+
+      ctx.shadowColor = "rgba(0,0,0,0.35)";
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = "rgba(255,255,255,0.95)";
+      ctx.font = `${Math.floor(r * 1.55)}px ui-sans-serif, system-ui, Apple Color Emoji, Segoe UI Emoji`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(emoji, 0, 1);
+
+      ctx.restore();
+    }
+
+    function overlay(text) {
+      ctx.save();
+      ctx.fillStyle = "rgba(0,0,0,0.38)";
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.fillStyle = "rgba(255,255,255,0.94)";
+      ctx.font = "800 22px ui-sans-serif, system-ui";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, W / 2, H / 2 - 8);
+
+      ctx.fillStyle = "rgba(255,255,255,0.72)";
+      ctx.font = "14px ui-sans-serif, system-ui";
+      ctx.fillText("← → / A D • Sürükle • Space: duraklat", W / 2, H / 2 + 22);
+      ctx.restore();
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "ArrowLeft" || e.code === "KeyA") left = true;
+      if (e.code === "ArrowRight" || e.code === "KeyD") right = true;
+      if (e.code === "Space") {
+        e.preventDefault();
+        togglePause();
+      }
+    });
+    window.addEventListener("keyup", (e) => {
+      if (e.code === "ArrowLeft" || e.code === "KeyA") left = false;
+      if (e.code === "ArrowRight" || e.code === "KeyD") right = false;
+    });
+
+    function getCanvasX(evt) {
+      const rect = canvas.getBoundingClientRect();
+      return (evt.clientX - rect.left) / rect.width * W;
+    }
+
+    canvas.addEventListener("pointerdown", (e) => {
+      canvas.setPointerCapture(e.pointerId);
+      pointerDown = true;
+
+      const x = getCanvasX(e);
+      pointerOffsetX = x - player.x;
+
+      if (!running && !gameOver) reset();
+      else if (gameOver) reset();
+    });
+
+    canvas.addEventListener("pointermove", (e) => {
+      if (!pointerDown || paused || !running) return;
+      const x = getCanvasX(e);
+      player.x = clamp(x - pointerOffsetX, player.r + 12, W - player.r - 12);
+    });
+
+    canvas.addEventListener("pointerup", () => pointerDown = false);
+    canvas.addEventListener("pointercancel", () => pointerDown = false);
+
+    pauseBtn.addEventListener("click", togglePause);
+    restartBtn.addEventListener("click", reset);
+
+    canvas.addEventListener("click", () => {
+      if (!running && !gameOver) reset();
+      else if (gameOver) reset();
+    });
+
+    loadBest();
+    resizeCanvas();
+
+    let last = performance.now();
+    function loop(now) {
+      const dt = Math.min(0.033, (now - last) / 1000);
+      last = now;
+      update(dt);
+      draw();
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Map of Us</title>
+
+  <link rel="stylesheet" href="styledeneme.css" />
+  <link rel="stylesheet" href="auth-gate.css" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <link rel="stylesheet" href="map.css" />
+</head>
+
+<body>
+  <header>
+    <h1>Map of Us</h1>
+    <p>Gezdiğimiz yerleri işaretleyelim sevgilim</p>
+  </header>
+
+  <main class="map-layout">
+    <section class="map-stage">
+      <div id="map" aria-label="Türkiye haritası"></div>
+      <div class="map-watermark">Alpy ❤️ İremiko</div>
+      <div class="map-grain" aria-hidden="true"></div>
+    </section>
+
+    <aside class="map-panel">
+      <div class="panel-head">
+        <h2>Pin Ekle Sevgilim</h2>
+        <div class="panel-sub" id="statusText">İller yükleniyor…</div>
+      </div>
+
+      <div class="field">
+        <label for="provinceSelect">İl</label>
+        <select id="provinceSelect">
+          <option value="" selected disabled>İl seç balım</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="districtSelect">İlçe seç balım</label>
+        <select id="districtSelect" disabled>
+          <option value="" selected disabled>Önce il seç balım</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="noteInput">Not (opsiyonel)</label>
+        <input id="noteInput" type="text" maxlength="60" placeholder="Örn: Tatil" />
+      </div>
+
+      <div class="actions">
+        <button id="addBtn" class="btn btn-primary" disabled>Pinle</button>
+        <button id="clearBtn" class="btn btn-ghost" type="button">Temizle</button>
+      </div>
+
+      <div class="pins">
+        <div class="pins-head">
+          <div class="pins-title">Pinler</div>
+          <div class="pins-actions">
+            <button id="exportBtn" class="chip" type="button">Export</button>
+            <label class="chip chip-file">
+              Import
+              <input id="importInput" type="file" accept="application/json" hidden />
+            </label>
+          </div>
+        </div>
+
+        <ul id="pinsList" class="pins-list"></ul>
+      </div>
+
+      <a class="back-home" href="index.html">← Ana sayfaya dön</a>
+    </aside>
+  </main>
+
+  <footer>
+    <p>Alpy ❤️ İremiko</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+
+  <script src="auth-gate.js" defer></script>
+
+  <script src="map.js" defer></script>
+</body>
+</html>

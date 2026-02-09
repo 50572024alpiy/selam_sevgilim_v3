@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="tr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mini Jump</title>
+  <style>
+    :root {
+      --bg0: #070A12;
+      --bg2: #0B1022;
+      --text: rgba(255, 255, 255, .92);
+      --muted: rgba(255, 255, 255, .68);
+      --glass1: rgba(255, 255, 255, .08);
+      --glass2: rgba(255, 255, 255, .05);
+      --stroke: rgba(255, 255, 255, .12);
+      --accent: 255, 77, 166;
+      --accent2: 120, 110, 255;
+      --radius: 22px;
+      --shadow: 0 22px 70px rgba(0, 0, 0, .52);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(900px 560px at 14% 8%, rgba(var(--accent), .22), transparent 56%),
+        radial-gradient(920px 560px at 92% 22%, rgba(var(--accent2), .20), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    .panel {
+      width: min(980px, 100%);
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, var(--glass1), var(--glass2));
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background:
+        radial-gradient(520px 240px at 14% 0%, rgba(var(--accent), .22), transparent 62%),
+        radial-gradient(520px 240px at 90% 120%, rgba(var(--accent2), .18), transparent 62%);
+      filter: blur(10px);
+      opacity: .9;
+      pointer-events: none;
+    }
+
+    header {
+      position: relative;
+      padding: 18px 18px 14px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    .title {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 860;
+      letter-spacing: .2px
+    }
+
+    .title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, .16);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 760;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      user-select: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, .09);
+      border-color: rgba(255, 255, 255, .22);
+    }
+
+    .btn:active {
+      transform: translateY(0px) scale(.99);
+    }
+
+    .btn.primary {
+      border-color: rgba(var(--accent), .38);
+      background: linear-gradient(180deg, rgba(var(--accent), .20), rgba(var(--accent2), .11));
+    }
+
+    .content {
+      position: relative;
+      padding: 16px 18px 18px;
+      display: grid;
+      gap: 14px
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 660px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 16px;
+      padding: 10px 12px;
+    }
+
+    .stat .k {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px
+    }
+
+    .stat .v {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .2px
+    }
+
+    .gameShell {
+      background: rgba(0, 0, 0, .20);
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 20px;
+      padding: 12px;
+    }
+
+    canvas {
+      width: 100%;
+      height: clamp(340px, 50vw, 560px);
+      display: block;
+      border-radius: 16px;
+      background:
+        radial-gradient(900px 320px at 50% 15%, rgba(255, 255, 255, .07), transparent 60%),
+        linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .02));
+      border: 1px solid rgba(255, 255, 255, .08);
+      touch-action: none;
+    }
+
+    .bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .06);
+      font-size: 12px;
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .toast {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      max-width: min(520px, calc(100% - 36px));
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(0, 0, 0, .28);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.35;
+      display: none;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .toast.show {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="panel">
+    <header>
+      <div class="title">
+        <h1>Mini Jump</h1>
+        <p>Platformlara bas, yukarı tırman. Düşersen oyun biter.</p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="index.html">← Ana menü</a>
+        <button class="btn" id="pauseBtn">⏸ Duraklat</button>
+        <button class="btn primary" id="restartBtn">⟲ Yeniden</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="stats">
+        <div class="stat">
+          <div class="k">Skor</div>
+          <div class="v" id="score">0</div>
+        </div>
+        <div class="stat">
+          <div class="k">En İyi</div>
+          <div class="v" id="best">—</div>
+        </div>
+        <div class="stat">
+          <div class="k">Seviye</div>
+          <div class="v" id="level">1</div>
+        </div>
+      </div>
+
+      <div class="gameShell">
+        <canvas id="c" aria-label="Mini Jump canvas"></canvas>
+      </div>
+
+      <div class="bar">
+        <div class="chips">
+          <span class="chip">⌨️ ← → / A D</span>
+          <span class="chip">📱 Basılı tut & sürükle</span>
+          <span class="chip">␣ Space: Duraklat</span>
+        </div>
+        <span class="chip">🧸🎀 • ☁️ platformlar</span>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </div>
+  </section>
+
+  <script>
+    const canvas = document.getElementById("c");
+    const ctx = canvas.getContext("2d");
+
+    const scoreEl = document.getElementById("score");
+    const bestEl = document.getElementById("best");
+    const levelEl = document.getElementById("level");
+    const toastEl = document.getElementById("toast");
+
+    const pauseBtn = document.getElementById("pauseBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const BEST_KEY = "jump_best_v1";
+
+    let dpr = Math.max(1, window.devicePixelRatio || 1);
+    let W = 800, H = 520;
+
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+    function rnd(a, b) { return a + Math.random() * (b - a); }
+
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toastEl.classList.remove("show"), 1600);
+    }
+
+    function loadBest() {
+      const v = localStorage.getItem(BEST_KEY);
+      bestEl.textContent = v ? v : "—";
+    }
+    function saveBestIfNeeded() {
+      const cur = Math.floor(score);
+      const prev = localStorage.getItem(BEST_KEY);
+      const prevScore = prev ? parseInt(prev, 10) : null;
+      if (!prevScore || cur > prevScore) {
+        localStorage.setItem(BEST_KEY, String(cur));
+        loadBest();
+        showToast("Yeni rekor! ✨");
+      }
+    }
+
+    let running = false;
+    let paused = false;
+    let gameOver = false;
+
+    let score = 0;
+    let level = 1;
+    let maxHeight = 0;
+
+    const player = {
+      x: 200, y: 200,
+      w: 34, h: 34,
+      vx: 0, vy: 0
+    };
+
+    const world = {
+      gravity: 1400,
+      moveSpeed: 520,
+      jumpV: 860
+    };
+
+    let platforms = []; 
+    let highestPlatY = 0;
+
+    let left = false, right = false;
+    let pointerDown = false;
+    let pointerOffsetX = 0;
+
+
+
+    function resizeCanvas() {
+      dpr = Math.max(1, window.devicePixelRatio || 1);
+      const rect = canvas.getBoundingClientRect();
+
+      W = Math.max(320, rect.width);
+      H = Math.max(280, rect.height);
+
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      player.x = clamp(player.x, player.w / 2 + 10, W - player.w / 2 - 10);
+    }
+    window.addEventListener("resize", resizeCanvas);
+
+    function reset() {
+      platforms = [];
+      score = 0;
+      maxHeight = 0;
+      level = 1;
+
+      running = true;
+      paused = false;
+      gameOver = false;
+
+      pauseBtn.textContent = "⏸ Duraklat";
+
+      player.x = W * 0.5;
+      player.y = H * 0.72;
+      player.vx = 0;
+      player.vy = -world.jumpV;
+
+      const baseY = H * 0.82;
+      platforms.push({ x: W * 0.5 - 70, y: baseY, w: 140, h: 14 });
+      highestPlatY = baseY;
+
+      for (let i = 0; i < 10; i++) spawnPlatformAbove();
+
+      scoreEl.textContent = "0";
+      levelEl.textContent = "1";
+      showToast("Başla! 🧸🎀");
+    }
+
+    function endGame() {
+      gameOver = true;
+      running = false;
+      paused = false;
+      pauseBtn.textContent = "⏸ Duraklat";
+      saveBestIfNeeded();
+      showToast("Düştün! ⟲ Yeniden dene");
+    }
+
+    function togglePause() {
+      if (!running || gameOver) return;
+      paused = !paused;
+      pauseBtn.textContent = paused ? "▶ Devam" : "⏸ Duraklat";
+    }
+
+    function spawnPlatformAbove() {
+      const difficulty = clamp(1 + score / 1200, 1, 2.2);
+      const gap = rnd(54, 78) * difficulty;
+      const w = rnd(70, 120) / difficulty;
+      const x = rnd(12, W - w - 12);
+      const y = highestPlatY - gap;
+
+      platforms.push({ x, y, w, h: 14 });
+      highestPlatY = y;
+    }
+
+    function rectOverlap(ax, ay, aw, ah, bx, by, bw, bh) {
+      return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
+    }
+
+    function update(dt) {
+      if (!running || paused || gameOver) return;
+
+      level = 1 + Math.floor(score / 600);
+      levelEl.textContent = String(level);
+
+      const dir = (right ? 1 : 0) - (left ? 1 : 0);
+      player.vx = dir * world.moveSpeed;
+
+      const prevY = player.y;
+
+      player.x += player.vx * dt;
+      player.vy += world.gravity * dt;
+      player.y += player.vy * dt;
+
+      // doodle wrap
+      if (player.x < -player.w / 2) player.x = W + player.w / 2;
+      if (player.x > W + player.w / 2) player.x = -player.w / 2;
+
+      // platform collision only while falling
+      if (player.vy > 0) {
+        const px = player.x - player.w / 2;
+        const py = player.y - player.h / 2;
+
+        for (const p of platforms) {
+          const hit = rectOverlap(px, py, player.w, player.h, p.x, p.y, p.w, p.h);
+          const wasAbove = (prevY + player.h / 2) <= (p.y + 2);
+          if (hit && wasAbove) {
+            player.vy = -world.jumpV;
+            break;
+          }
+        }
+      }
+
+      const threshold = H * 0.36;
+      if (player.y < threshold) {
+        const dy = threshold - player.y;
+        player.y = threshold;
+
+        for (const p of platforms) p.y += dy;
+        highestPlatY += dy;
+
+        maxHeight += dy;
+        score = Math.floor(maxHeight / 3);
+        scoreEl.textContent = String(score);
+      }
+
+      while (platforms.length < 18) spawnPlatformAbove();
+      while (highestPlatY > -120) spawnPlatformAbove();
+
+      platforms = platforms.filter(p => p.y < H + 90);
+
+      if (player.y - player.h / 2 > H + 40) {
+        endGame();
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      const vg = ctx.createRadialGradient(W * 0.5, H * 0.2, 10, W * 0.5, H * 0.55, Math.max(W, H) * 0.8);
+      vg.addColorStop(0, "rgba(255,255,255,0.07)");
+      vg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = vg;
+      ctx.fillRect(0, 0, W, H);
+
+      for (const p of platforms) {
+        drawCloudPlatform(p.x, p.y, p.w, p.h);
+        ctx.save();
+        ctx.globalAlpha = 0.85;
+        ctx.font = "14px ui-sans-serif, system-ui, Apple Color Emoji, Segoe UI Emoji";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("☁️", p.x + p.w / 2, p.y + p.h / 2);
+        ctx.restore();
+      }
+
+      drawPlayer(player.x, player.y);
+
+      if (!running && !gameOver) overlay("Başlamak için dokun / tıkla");
+      else if (paused) overlay("Duraklatıldı");
+      else if (gameOver) overlay("Bitti — Yeniden başlat");
+    }
+
+    function drawCloudPlatform(x, y, w, h) {
+      ctx.save();
+      ctx.shadowColor = "rgba(0,0,0,0.35)";
+      ctx.shadowBlur = 16;
+
+      const r = 10;
+      ctx.fillStyle = "rgba(255,255,255,0.11)";
+      roundRect(x, y, w, h, r); ctx.fill();
+
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "rgba(255,255,255,0.08)";
+      roundRect(x, y, w, Math.max(4, h * 0.45), r); ctx.fill();
+
+      ctx.strokeStyle = "rgba(255,255,255,0.14)";
+      ctx.lineWidth = 1;
+      roundRect(x, y, w, h, r); ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawPlayer(cx, cy) {
+      ctx.save();
+      ctx.shadowColor = "rgba(255,77,166,0.25)";
+      ctx.shadowBlur = 22;
+
+      const grad = ctx.createRadialGradient(cx - 8, cy - 8, 6, cx, cy, 22);
+      grad.addColorStop(0, "rgba(255,255,255,0.16)");
+      grad.addColorStop(0.45, "rgba(255,77,166,0.18)");
+      grad.addColorStop(1, "rgba(255,255,255,0.06)");
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = "rgba(255,255,255,0.14)";
+      ctx.beginPath();
+      ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.shadowColor = "rgba(0,0,0,0.35)";
+      ctx.shadowBlur = 10;
+      ctx.font = "24px ui-sans-serif, system-ui, Apple Color Emoji, Segoe UI Emoji";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "rgba(255,255,255,0.95)";
+      ctx.fillText("🧸", cx, cy + 1);
+      ctx.font = "14px ui-sans-serif, system-ui, Apple Color Emoji, Segoe UI Emoji";
+      ctx.fillText("🎀", cx + 16, cy - 14);
+
+      ctx.restore();
+    }
+
+    function overlay(text) {
+      ctx.save();
+      ctx.fillStyle = "rgba(0,0,0,0.38)";
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.fillStyle = "rgba(255,255,255,0.94)";
+      ctx.font = "800 22px ui-sans-serif, system-ui";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, W / 2, H / 2 - 8);
+
+      ctx.fillStyle = "rgba(255,255,255,0.72)";
+      ctx.font = "14px ui-sans-serif, system-ui";
+      ctx.fillText("← → / A D • Sürükle • Space: duraklat", W / 2, H / 2 + 22);
+      ctx.restore();
+    }
+
+    function roundRect(x, y, w, h, r) {
+      r = Math.min(r, w / 2, h / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "ArrowLeft" || e.code === "KeyA") left = true;
+      if (e.code === "ArrowRight" || e.code === "KeyD") right = true;
+      if (e.code === "Space") {
+        e.preventDefault();
+        togglePause();
+      }
+    });
+    window.addEventListener("keyup", (e) => {
+      if (e.code === "ArrowLeft" || e.code === "KeyA") left = false;
+      if (e.code === "ArrowRight" || e.code === "KeyD") right = false;
+    });
+
+    function getCanvasX(evt) {
+      const rect = canvas.getBoundingClientRect();
+      return (evt.clientX - rect.left) / rect.width * W;
+    }
+
+    canvas.addEventListener("pointerdown", (e) => {
+      canvas.setPointerCapture(e.pointerId);
+      pointerDown = true;
+
+      const x = getCanvasX(e);
+      pointerOffsetX = x - player.x;
+
+      if (!running && !gameOver) reset();
+      else if (gameOver) reset();
+    });
+
+    canvas.addEventListener("pointermove", (e) => {
+      if (!pointerDown || paused || !running) return;
+      const x = getCanvasX(e);
+      player.x = clamp(x - pointerOffsetX, 10, W - 10);
+    });
+
+    canvas.addEventListener("pointerup", () => pointerDown = false);
+    canvas.addEventListener("pointercancel", () => pointerDown = false);
+
+    pauseBtn.addEventListener("click", togglePause);
+    restartBtn.addEventListener("click", reset);
+
+    canvas.addEventListener("click", () => {
+      if (!running && !gameOver) reset();
+      else if (gameOver) reset();
+    });
+
+    loadBest();
+    resizeCanvas();
+
+    let last = performance.now();
+    function loop(now) {
+      const dt = Math.min(0.033, (now - last) / 1000);
+      last = now;
+      update(dt);
+      draw();
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  </script>
+</body>
+
+</html>

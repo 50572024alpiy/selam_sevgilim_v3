@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz</title>
+  <link rel="stylesheet" href="f1.css" />
+  <link rel="stylesheet" href="auth-gate.css">
+</head>
+
+<body>
+  <main class="wrap">
+    <header class="head">
+      <h1>Mini Quiz</h1>
+      <p class="sub">Bütün sorular slaytlardan hayatım :) </p>
+
+      <div class="hud">
+        <div class="pill">
+          Skor:
+          <strong><span id="score" aria-live="polite">0</span>/<span id="total">0</span></strong>
+        </div>
+        <div class="actions">
+          <button id="resetBtn" class="btn">Sıfırla</button>
+        </div>
+      </div>
+    </header>
+
+    <section id="quiz" class="quiz" aria-live="polite"></section>
+
+    <footer class="foot">
+      <a class="back" href="index.html">← Ana menü</a>
+    </footer>
+  </main>
+
+  <script>
+
+    const QUIZ = [
+      {
+        q: "Beyaz logolu lastik hangi hamurdur ?",
+        choices: [
+          { t: "Yumuşak", correct: false },
+          { t: "Sert", correct: true },
+          { t: "Orta", correct: false },
+          { t: "Geçiş", correct: false },
+        ],
+        exp: "🌻"
+      },
+      {
+        q: "Start anında kaç kırmızı ışık söner ?",
+        choices: [
+          { t: "5", correct: true },
+          { t: "4", correct: false },
+          { t: "3", correct: false },
+          { t: "6", correct: false },
+        ],
+        exp: "🌸"
+      },
+      {
+        q: "Hangi takım 2025 Gridinde yer almamaktadır ?",
+        choices: [
+          { t: "Racing Bulls", correct: false },
+          { t: "Cadillac", correct: true },
+          { t: "Aramco", correct: false },
+          { t: "Haas", correct: false },
+        ],
+        exp: "🌺"
+      },
+      {
+        q: "Hangisi 2025 Gridinde McLaren pilotudur?",
+        choices: [
+          { t: "Pierre Gasly", correct: false },
+          { t: "Lando Norris", correct: true },
+          { t: "Lance Stroll", correct: false },
+          { t: "Carlos Sainz", correct: false },
+        ],
+        exp: "🌷"
+      },
+      {
+        q: "Ferrari takımının pilot ikilisi hangisidir?",
+        choices: [
+          { t: "Lewis Hamilton - Charles Leclerc", correct: true },
+          { t: "Lando Norris - Oscar Piastri", correct: false },
+          { t: "Max Verstappen - Yuki Tsunoda", correct: false },
+          { t: "Geogre Russell - Kimi Antonelli", correct: false },
+        ],
+        exp: "🌹"
+      },
+      {
+        q: "Alpy hangi pilottan daha çok nefret eder",
+        choices: [
+          { t: "Nico Hulkenberg", correct: false },
+          { t: "Lando Norris", correct: false },
+          { t: "Max Verstappen", correct: true },
+          { t: "Alexander Albon", correct: false },
+        ],
+        exp: "🌸"
+      },
+      {
+        q: "Mercedes takımının pilot ikilisi hangisidir?",
+        choices: [
+          { t: "Lewis Hamilton - Charles Leclerc", correct: false },
+          { t: "Lando Norris - Oscar Piastri", correct: false },
+          { t: "Max Verstappen - Yuki Tsunoda", correct: false },
+          { t: "Geogre Russell - Kimi Antonelli", correct: true },
+        ],
+        exp: "🌺"
+      },
+      {
+        q: "Lewis Hamilton'ın araç numarası nedir",
+        choices: [
+          { t: "4", correct: false },
+          { t: "16", correct: false },
+          { t: "22", correct: false },
+          { t: "44", correct: true },
+        ],
+        exp: "🌼"
+      },
+      {
+        q: "Grand Prix'de tur sayısının farklı olmasının temel sebebi nedir",
+        choices: [
+          { t: "Seyirci sayısından", correct: false },
+          { t: "Hava Sıcaklığından", correct: false },
+          { t: "Takımların anlaşarak istediği toplam tur sayısı", correct: false },
+          { t: "Hedef mesafesinin aynı mesafe olması için", correct: true },
+        ],
+        exp: "🌻"
+      },
+      {
+        q: "Tüm Formula 1 pistleri kaç sektöre ayrılır",
+        choices: [
+          { t: "2", correct: false },
+          { t: "4", correct: false },
+          { t: "5", correct: false },
+          { t: "3", correct: true },
+        ],
+        exp: "🌷"
+      },
+      {
+        q: "Sprint yarışında puan alan pilot sayısı ve birinciye verilen puan kombinasyonu hangisidir",
+        choices: [
+          { t: "İlk 10 pilot, birinciye 25 puan", correct: false },
+          { t: "İlk 5 pilot, birinciye 10 puan", correct: false },
+          { t: "İlk 8 pilot, birinciye 8 puan", correct: true },
+          { t: "İlk 3 pilot, birinciye 15 puan", correct: false },
+        ],
+        exp: "🌹"
+      },
+      {
+        q: "Ana yarışta birinci olan pilota kaç puan verilir",
+        choices: [
+          { t: "20", correct: false },
+          { t: "18", correct: false },
+          { t: "15", correct: false },
+          { t: "25", correct: true },
+        ],
+        exp: "🌸"
+      },
+      {
+        q: "Yarış haftasonu formatında ana yarış hangi gün yapılır",
+        choices: [
+          { t: "Perşembe", correct: false },
+          { t: "Cuma", correct: false },
+          { t: "Cumartesi", correct: false },
+          { t: "Pazar", correct: true },
+        ],
+        exp: "🌺"
+      },
+      {
+        q: "Lewis Hamiltonun Mercedes kariyerindeki yarış mühendisi 'Bono' kimdir ?",
+        choices: [
+          { t: "Gianpiero Lambiase", correct: false },
+          { t: "Pete Bonnington", correct: true },
+          { t: "Tom Stallard", correct: false },
+          { t: "Mark Temple", correct: false },
+        ],
+        exp: "🌼"
+      },
+      {
+        q: "Hangi ikili McLaren CEO & takım patronu ikilisidir ?",
+        choices: [
+          { t: "Christian Horner - Laurent Mekies", correct: false },
+          { t: "Toto Wolff - James Vowles", correct: false },
+          { t: "Zak Brown - Andrea Stella", correct: true },
+          { t: "Mattia Binotto - Frédéric Vasseur", correct: false },
+        ],
+        exp: "🌻"
+      },
+      {
+        q: "Hangisi kuru zemin (slick) lastiklerden değildir ?",
+        choices: [
+          { t: "C1", correct: false },
+          { t: "C3", correct: false },
+          { t: "C5", correct: false },
+          { t: "Intermediates", correct: true },
+        ],
+        exp: "🌷"
+      },
+      {
+        q: "Hangi kuru zemin (slick) ve renk eşleştirmesi doğrudur ?",
+        choices: [
+          { t: "Yumuşak beyaz, orta kırmızı, sert sarı", correct: false },
+          { t: "Yumuşak kırmızı, orta sarı, sert beyaz", correct: true },
+          { t: "Yumuşak sarı, orta beyaz, sert kırmızı", correct: false },
+          { t: "Yumuşak sarı, orta kırmızı, sert beyaz", correct: false },
+        ],
+        exp: "🌹"
+      },
+      {
+        q: "Sarı bayrak ne anlama gelir ?",
+        choices: [
+          { t: "Pist tamamen temiz, tam gaz devam", correct: false },
+          { t: "Lapped (tur yiyen) araca yol ver", correct: false },
+          { t: "Pistte tehlike var, yavaşla ve geçiş yapma", correct: true },
+          { t: "Yarış veya seans resmen bitti", correct: false },
+        ],
+        exp: "🌸"
+      },
+    ];
+
+    const quizEl = document.getElementById("quiz");
+    const scoreEl = document.getElementById("score");
+    const totalEl = document.getElementById("total");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let score = 0;
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function randomized() {
+      const clone = QUIZ.map(q => ({
+        q: q.q,
+        exp: q.exp || "",
+        choices: q.choices.map(c => ({ t: c.t, correct: !!c.correct }))
+      }));
+      shuffle(clone);
+      clone.forEach(q => shuffle(q.choices));
+      return clone;
+    }
+
+    function render(questions) {
+      totalEl.textContent = questions.length;
+      score = 0;
+      scoreEl.textContent = "0";
+
+      // Reverse map to ensure first question is on top (highest DOM order usually last, but with absolute position and z-index we control it)
+      // Actually, simply setting z-index is enough.
+
+      quizEl.innerHTML = questions.map((q, i) => `
+      <article class="qcard" data-idx="${i}" aria-label="Soru ${i + 1}" style="z-index: ${questions.length - i};">
+        <div class="q">${q.q}</div>
+        <ul class="opts">
+          ${q.choices.map((c, j) => `
+            <li>
+              <button class="opt"
+                data-j="${j}"
+                aria-pressed="false"
+                data-correct="${c.correct ? '1' : '0'}">
+                <span class="opt__text">${c.t}</span>
+                <span class="badge" aria-hidden="true"></span>
+              </button>
+            </li>
+          `).join("")}
+        </ul>
+        <div class="exp" id="exp-${i}" hidden>
+          <span class="tag" aria-hidden="true"></span> ${q.exp || ""}
+        </div>
+        <div class="hint-text" style="text-align:center; font-size: 12px; opacity: 0; transition: opacity 0.3s; margin-top: auto;">Devam etmek için dokun</div>
+      </article>
+    `).join("") + `
+      <div class="done-card">
+        <h2>Tebrikler Aşkım! 🎉</h2>
+        <p>Quiz bitti!</p>
+        <p>Skorun: <strong id="finalScore">0</strong></p>
+        <button class="btn" onclick="render(randomized())" style="margin-top: 20px;">Tekrar Oyna</button>
+      </div>
+    `;
+
+      quizEl.querySelectorAll(".qcard").forEach(card => {
+        card.addEventListener("click", e => {
+          // If already answered, dismiss the card
+          if (card.classList.contains("answered")) {
+            card.classList.add("slide-out");
+
+            // Check if this was the last card
+            const remaining = quizEl.querySelectorAll(".qcard:not(.slide-out)").length;
+            // The current one has just been added slide-out, but querySelectorAll might capture it still or not depending on timing?
+            // Actually classList.add is synchronous.
+            // However, let's verify count.
+            // If remaining is 0, show done card.
+
+            if (remaining === 0) {
+              setTimeout(() => {
+                const doneCard = quizEl.querySelector(".done-card");
+                const finalScoreEl = document.getElementById("finalScore");
+                if (finalScoreEl) finalScoreEl.textContent = score + " / " + questions.length;
+                if (doneCard) doneCard.classList.add("active");
+              }, 300);
+            }
+            return;
+          }
+
+          const btn = e.target.closest(".opt");
+          if (!btn) return;
+
+          // Logic for answering
+          const correct = btn.dataset.correct === "1";
+          card.classList.add("answered");
+          btn.classList.add("selected");
+          btn.setAttribute("aria-pressed", "true");
+
+          // Reveal hint text
+          const hint = card.querySelector(".hint-text");
+          if (hint) hint.style.opacity = 0.7;
+
+          card.querySelectorAll(".opt").forEach(o => {
+            o.disabled = true;
+            if (o.dataset.correct === "1") o.classList.add("correct");
+          });
+          if (!correct) btn.classList.add("wrong");
+          else {
+            card.classList.add("ok");
+            score++;
+            scoreEl.textContent = String(score);
+          }
+
+          const exp = card.querySelector(".exp");
+          if (exp && exp.textContent.trim()) exp.hidden = false;
+        });
+      });
+    }
+
+    resetBtn.addEventListener("click", () => render(randomized()));
+
+    render(randomized());
+  </script>
+</body>
+
+</html>

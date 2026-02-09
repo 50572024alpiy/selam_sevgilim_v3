@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fotoğraflar</title>
+  <link rel="stylesheet" href="photo.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="head">
+      <h1>💌</h1>
+    </header>
+
+    <section class="center">
+      <button id="openNote" class="btn">Notu Aç</button>
+    </section>
+
+    <footer class="foot">
+      <a class="back" href="index.html">← Ana menü</a>
+    </footer>
+  </main>
+
+  <div id="loveNote" class="modal" role="dialog" aria-modal="true" aria-labelledby="noteTitle" hidden>
+    <div class="dialog">
+      <button id="closeNote" class="close" aria-label="Kapat">×</button>
+      <h2 id="noteTitle">❤️</h2>
+
+      <div class="note-body">
+        <p><em>Güzel Sevgilim,</em></p>
+        <p><em>Fotoğraflarımızı burada paylaşmayı güvenli bulmadığım için fiziksel olarak sana vermek istedim.
+          <br>Bize en çok benzeyen versiyonları elde etmeye çalıştım, birkaçı çok yakın olmasa bile fena değiller,
+          zaten ne yaparsam yapayım senin güzelliğini yeniden oluşturamıyorlar o yüzden en yakın olanları kullandım.
+          <br>Bundan esinlenerek, yapay zeka fotoğraflarımız yerine, birlikte olduğumuz fotoğraflardan 2025 albümü yapmak istedim. Gelecek bütün yıllarda da 
+            bu albüme seninle ekleme yapacağız birtanem.</em>
+  
+        <p>Alpy</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const modal = document.getElementById('loveNote');
+      const open  = document.getElementById('openNote');
+      const close = document.getElementById('closeNote');
+
+      const openModal  = () => { modal.hidden = false; document.body.classList.add('no-scroll'); };
+      const closeModal = () => { modal.hidden = true;  document.body.classList.remove('no-scroll'); };
+
+      open.addEventListener('click', openModal);
+      close.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && !modal.hidden) closeModal(); });
+    })();
+  </script>
+</body>
+</html>

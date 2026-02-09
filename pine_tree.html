@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pine Tree</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 20%, #1b2735 0%, #090a0f 100%); 
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            overflow: hidden;
+            font-family: sans-serif;
+            position: relative;
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background: radial-gradient(ellipse at center, #eef 0%, #dde 60%, #bcc 100%);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            transform: scaleX(1.5);
+            z-index: 1;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .snow-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none; 
+            z-index: 30; 
+        }
+
+        .snow-layer {
+            position: absolute;
+            top: -100vh; 
+            width: 100%;
+            height: 100%;
+            color: #fff;
+        }
+
+        .snow-far {
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: snowfall 25s linear infinite;
+            box-shadow: 
+                10vw 10vh #fff, 25vw 35vh #fff, 45vw 15vh #fff, 65vw 45vh #fff, 85vw 5vh #fff,
+                15vw 65vh #fff, 35vw 85vh #fff, 55vw 70vh #fff, 75vw 90vh #fff, 95vw 60vh #fff,
+                5vw 20vh #fff, 30vw 50vh #fff, 60vw 30vh #fff, 80vw 80vh #fff, 90vw 10vh #fff,
+                10vw 110vh #fff, 25vw 135vh #fff, 45vw 115vh #fff, 65vw 145vh #fff, 85vw 105vh #fff,
+                15vw 165vh #fff, 35vw 185vh #fff, 55vw 170vh #fff, 75vw 190vh #fff, 95vw 160vh #fff,
+                5vw 120vh #fff, 30vw 150vh #fff, 60vw 130vh #fff, 80vw 180vh #fff, 90vw 110vh #fff;
+        }
+
+        .snow-mid {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            opacity: 0.8;
+            filter: blur(1px); 
+            animation: snowfall 18s linear infinite;
+            box-shadow: 
+                12vw 18vh, 37vw 42vh, 62vw 22vh, 87vw 55vh,
+                22vw 72vh, 47vw 92vh, 72vw 78vh, 97vw 98vh,
+                12vw 118vh, 37vw 142vh, 62vw 122vh, 87vw 155vh,
+                22vw 172vh, 47vw 192vh, 72vw 178vh, 97vw 198vh;
+        }
+
+        .snow-near {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            opacity: 0.9;
+            filter: blur(2px);
+            animation: snowfall 12s linear infinite;
+            box-shadow: 
+                20vw 30vh, 50vw 60vh, 80vw 20vh,
+                30vw 80vh, 60vw 95vh, 90vw 50vh,
+                20vw 130vh, 50vw 160vh, 80vw 120vh,
+                30vw 180vh, 60vw 195vh, 90vw 150vh;
+        }
+
+        @keyframes snowfall {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(100vh); 
+            }
+        }
+
+        .tree-container {
+            position: relative;
+            bottom: 80px;
+            z-index: 10;
+            width: 300px;
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .trunk {
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(90deg, #3e2723 0%, #5d4037 40%, #3e2723 100%);
+            position: absolute;
+            bottom: 0;
+            border-radius: 5px;
+            box-shadow: inset 0 0 10px #221;
+        }
+
+        .layer {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: solid transparent;
+            border-right: solid transparent;
+            border-bottom: solid;
+            filter: drop-shadow(0 10px 5px rgba(0,0,0,0.3)); 
+        }
+
+        .layer::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 100%; 
+            width: 100%; 
+            height: 15px;
+            background: inherit;
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+
+        .layer-bottom {
+            bottom: 40px;
+            border-width: 0 110px 140px 110px;
+            border-bottom-color: #0f3d0f;
+            color: #0f3d0f;
+            z-index: 2;
+        }
+        .layer-middle {
+            bottom: 120px;
+            border-width: 0 90px 120px 90px;
+            border-bottom-color: #145214;
+            color: #145214;
+            z-index: 3;
+        }
+        .layer-top {
+            bottom: 190px;
+            border-width: 0 70px 100px 70px;
+            border-bottom-color: #1a6b1a; 
+            color: #1a6b1a;
+            z-index: 4;
+        }
+        .layer-peak {
+            bottom: 250px;
+            border-width: 0 50px 90px 50px;
+            border-bottom-color: #228b22;
+            color: #228b22;
+            z-index: 5;
+        }
+
+        .star {
+            position: absolute;
+            top: 75px;
+            z-index: 10;
+            color: #ffd700;
+            font-size: 50px;
+            text-shadow: 0 0 20px #ffea00, 0 0 40px #ffea00;
+            animation: star-glow 2s infinite alternate;
+        }
+        .bauble {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            z-index: 6;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .red { background: radial-gradient(circle at 30% 30%, #ffadad, #d32f2f); }
+        .gold { background: radial-gradient(circle at 30% 30%, #fff9c4, #fbc02d); }
+        .blue { background: radial-gradient(circle at 30% 30%, #bbdefb, #1976d2); }
+
+        .light {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #fff;
+            z-index: 7;
+            box-shadow: 0 0 5px #fff;
+            animation: twinkle 1.5s infinite ease-in-out;
+        }
+
+        .p1 { bottom: 270px; left: calc(50% - 10px); }
+        .p2 { bottom: 290px; left: calc(50% + 15px); }
+        .p3 { bottom: 210px; left: calc(50% - 30px); }
+        .p4 { bottom: 230px; left: calc(50% + 20px); }
+        .p5 { bottom: 200px; left: calc(50% + 40px); }
+        .p6 { bottom: 140px; left: calc(50% - 50px); }
+        .p7 { bottom: 160px; left: calc(50% + 10px); }
+        .p8 { bottom: 150px; left: calc(50% + 60px); }
+        .p9 { bottom: 170px; left: calc(50% - 20px); }
+        .p10 { bottom: 60px; left: calc(50% - 80px); }
+        .p11 { bottom: 90px; left: calc(50% + 50px); }
+        .p12 { bottom: 70px; left: calc(50% - 40px); }
+        .p13 { bottom: 50px; left: calc(50% + 80px); }
+
+        .d1 { animation-delay: 0s; }
+        .d2 { animation-delay: 0.5s; }
+        .d3 { animation-delay: 1.2s; }
+        .d4 { animation-delay: 0.3s; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.4; transform: scale(0.8); box-shadow: 0 0 2px currentColor; }
+            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px currentColor; }
+        }
+        @keyframes star-glow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #ffd700; transform: scale(1); }
+            to { text-shadow: 0 0 20px #fff, 0 0 40px #ffea00; transform: scale(1.1); }
+        }
+        
+        .l-red { background-color: #ff5252; box-shadow: 0 0 5px #ff5252; }
+        .l-yellow { background-color: #ffea00; box-shadow: 0 0 5px #ffea00; }
+        .l-blue { background-color: #40c4ff; box-shadow: 0 0 5px #40c4ff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="snow-container">
+        <div class="snow-layer snow-far"></div>
+        <div class="snow-layer snow-mid"></div>
+        <div class="snow-layer snow-near"></div>
+    </div>
+
+    <div class="ground"></div>
+
+    <div class="tree-container">
+        <div class="star">★</div>
+
+        <div class="layer layer-peak"></div>
+        <div class="layer layer-top"></div>
+        <div class="layer layer-middle"></div>
+        <div class="layer layer-bottom"></div>
+        <div class="trunk"></div>
+
+        <div class="bauble red p1"></div>
+        <div class="bauble gold p3"></div>
+        <div class="bauble blue p6"></div>
+        <div class="bauble red p8"></div>
+        <div class="bauble gold p10"></div>
+        <div class="bauble blue p13"></div>
+
+        <div class="light l-yellow p2 d1"></div>
+        <div class="light l-blue p4 d2"></div>
+        <div class="light l-red p5 d3"></div>
+        <div class="light l-yellow p7 d4"></div>
+        <div class="light l-red p9 d1"></div>
+        <div class="light l-blue p11 d2"></div>
+        <div class="light l-yellow p12 d3"></div>
+    </div>
+
+</body>
+</html>

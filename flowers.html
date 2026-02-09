@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flowers for u</title>
+
+  <link rel="stylesheet" href="auth-gate.css" />
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      --bg-1: 5 10 24;
+      --bg-2: 3 7 18;
+
+      --accent-pink: 244 114 182;
+      --accent-gold: 250 204 21;
+      --accent-mint: 45 212 191;
+      --accent-blue: 59 130 246;
+
+      --card-bg: 15 23 42 / 0.85;
+      --card-border: 148 163 184;
+      --card-radius: 26px;
+      --card-shadow: 0 26px 70px rgba(0, 0, 0, .85);
+
+      --font-system: system-ui, -apple-system, BlinkMacSystemFont,
+        "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, "Noto Sans", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(18px, 4vw, 32px);
+      font-family: var(--font-system);
+      background:
+        radial-gradient(circle at -10% -20%, rgba(var(--accent-pink), .20), transparent 55%),
+        radial-gradient(circle at 110% 0%, rgba(var(--accent-mint), .20), transparent 55%),
+        radial-gradient(circle at 50% 120%, rgba(var(--accent-blue), .18), transparent 60%),
+        linear-gradient(180deg, rgb(var(--bg-1)) 0%, rgb(var(--bg-2)) 100%);
+      color: #f9fafb;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 880px;
+      position: relative;
+    }
+
+    .page-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -40px;
+      background:
+        radial-gradient(520px 280px at 0% 0%, rgba(var(--accent-pink), .18), transparent 60%),
+        radial-gradient(520px 260px at 100% 0%, rgba(var(--accent-mint), .16), transparent 60%);
+      opacity: 0.65;
+      filter: blur(10px);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+
+    .back-button {
+      margin-bottom: 12px;
+      background: rgba(15, 23, 42, .92);
+      color: #e5e7eb;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, .85);
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+
+      box-shadow: 0 10px 30px rgba(15, 23, 42, .8);
+      transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .15s ease,
+        box-shadow .2s ease;
+    }
+
+    .back-button:hover {
+      background: radial-gradient(circle at 0% 0%, rgba(var(--accent-mint), .25), transparent 55%),
+        rgba(15, 23, 42, 1);
+      border-color: rgba(var(--accent-mint), .9);
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 1);
+    }
+
+
+    .flower-card {
+      width: 100%;
+      border-radius: var(--card-radius);
+      padding: clamp(18px, 3vw, 26px);
+      background:
+        radial-gradient(900px 600px at 0% 0%, rgba(var(--accent-pink), .18), transparent 60%),
+        radial-gradient(900px 600px at 100% 0%, rgba(var(--accent-mint), .16), transparent 65%),
+        linear-gradient(135deg, rgba(15, 23, 42, .94) 0%, rgba(15, 23, 42, .98) 100%);
+      border: 1px solid rgba(var(--card-border), .65);
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(26px) saturate(160%);
+      -webkit-backdrop-filter: blur(26px) saturate(160%);
+    }
+
+    .flower-card-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .flower-card-title {
+      font-weight: 600;
+      font-size: clamp(18px, 2.2vw, 22px);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+      position: relative;
+    }
+
+    .flower-card-title::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 46px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg,
+          rgba(var(--accent-pink), 1),
+          rgba(var(--accent-mint), 1));
+      opacity: .9;
+    }
+
+    .flower-tabs {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0% 0%, rgba(15, 23, 42, .9), rgba(15, 23, 42, .96));
+      border: 1px solid rgba(148, 163, 184, .6);
+      box-shadow: 0 10px 28px rgba(15, 23, 42, .8);
+    }
+
+    .flower-tab {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: rgba(248, 250, 252, .9);
+      padding: 5px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      transition:
+        background .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease,
+        color .18s ease;
+      outline: none;
+      white-space: nowrap;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .flower-tab:hover:not(.active) {
+      background: rgba(15, 23, 42, .92);
+      border-color: rgba(148, 163, 184, .9);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .55);
+    }
+
+    .flower-tab.active {
+      background: linear-gradient(135deg,
+          rgba(var(--accent-pink), .95),
+          rgba(var(--accent-gold), .95),
+          rgba(var(--accent-mint), .98));
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 8px 26px rgba(248, 113, 113, .55);
+    }
+
+    .flower-frame-wrapper {
+      border-radius: 22px;
+      overflow: hidden;
+      margin-top: 8px;
+      background: radial-gradient(circle at 0% 0%, #020617, #020617);
+      border: 1px solid rgba(30, 64, 175, .6);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, .9);
+      position: relative;
+      isolation: isolate;
+    }
+
+    .flower-frame-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: linear-gradient(120deg,
+          transparent 0%,
+          rgba(255, 255, 255, .06) 40%,
+          rgba(255, 255, 255, .02) 60%,
+          transparent 100%);
+      transform: translateX(-40%) skewX(-18deg);
+      opacity: 0;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    .flower-card:hover .flower-frame-wrapper::before {
+      opacity: .9;
+      transform: translateX(0) skewX(-18deg);
+    }
+
+    .flower-frame-wrapper iframe {
+      display: block;
+      width: 100%;
+      height: 720px;
+      border: 0;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 16px;
+      }
+
+      .flower-card {
+        padding: 16px 14px 18px;
+        border-radius: 22px;
+      }
+
+      .flower-tabs {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .flower-card-title {
+        margin-bottom: 2px;
+      }
+
+      .flower-frame-wrapper iframe {
+        height: 640px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .flower-frame-wrapper iframe {
+        height: 560px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper">
+    <button class="back-button" onclick="window.location.href='index.html'">
+      ← Ana sayfaya dön
+    </button>
+
+    <div class="flower-card">
+      <div class="flower-card-header">
+        <div class="flower-card-title">🧡</div>
+
+        <div class="flower-tabs">
+          <button class="flower-tab active" data-flower="chrysanthemum.html">
+            Chrysanthemum
+          </button>
+          <button class="flower-tab" data-flower="sunflower.html">
+            Sunflower
+          </button>
+          <button class="flower-tab" data-flower="flower-vase.html">
+            Vase
+          </button>
+          <button class="flower-tab" data-flower="pine_tree.html">
+            Pıne Tree
+          </button>
+          <button class="flower-tab" data-flower="rose.html">
+            Rose
+          </button>
+        </div>
+      </div>
+
+      <div class="flower-frame-wrapper">
+        <iframe id="flowerFrame" src="chrysanthemum.html" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const frame = document.getElementById("flowerFrame");
+      const tabs = document.querySelectorAll(".flower-tab");
+
+      function setActiveTab(targetSrc) {
+        frame.src = targetSrc;
+        tabs.forEach((t) => {
+          if (t.dataset.flower === targetSrc) {
+            t.classList.add("active");
+          } else {
+            t.classList.remove("active");
+          }
+        });
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const targetSrc = tab.dataset.flower;
+          setActiveTab(targetSrc);
+        });
+      });
+
+      // Handle URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const flowerParam = urlParams.get('flower');
+
+      if (flowerParam) {
+        // Verify if such a tab exists to avoid setting invalid srcs
+        const exists = Array.from(tabs).some(tab => tab.dataset.flower === flowerParam);
+        if (exists) {
+          setActiveTab(flowerParam);
+        }
+      }
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Krizantem</title>
+  <link rel="stylesheet" href="chrysanthemum.css" />
+  <link rel="stylesheet" href="auth-gate.css">
+</head>
+<body>
+
+  <div class="chrysanthemum">
+    <div class="stem"></div>
+
+    <div class="layer-1">
+      <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+    </div>
+
+    <div class="layer-2">
+      <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+    </div>
+
+    <div class="layer-3">
+      <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div>
+    </div>
+
+    <div class="center"></div>
+  </div>
+
+  <button id="openNote" class="note-fab" aria-haspopup="dialog" aria-controls="loveNote" title="Notu aç">💌</button>
+
+  <div id="loveNote" class="modal" role="dialog" aria-modal="true" aria-labelledby="loveNoteTitle" hidden>
+    <div class="dialog">
+      <button id="closeNote" class="close" aria-label="Kapat">×</button>
+      <h2 id="loveNoteTitle">❤️ ❤️ ❤️</h2>
+
+      <div class="note-body">
+        <p>Birtanem,</p>
+        <p>
+          İlk yapmaya çalıştığım çiçek bu site için buydu fakat becerememiştim, biraz gecikmeli olsa da tamamladım.
+          Şimdilik çiçek almamamı söyledin, o yüzden kasım ayında kasımpatını veremedim, buradan vermek zorundayım sevgilim.
+          
+        </p>
+        <p>Seni çok çok çok Seviyorummmmmm</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modal = document.getElementById('loveNote');
+      const open  = document.getElementById('openNote');
+      const close = document.getElementById('closeNote');
+
+      function openModal(){ modal.hidden = false; document.body.classList.add('no-scroll'); }
+      function closeModal(){ modal.hidden = true;  document.body.classList.remove('no-scroll'); }
+
+      open.addEventListener('click', openModal);
+      close.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && !modal.hidden) closeModal(); });
+    })();
+  </script>
+</body>
+</html>

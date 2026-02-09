@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tür Seç Balım</title>
+  <link rel="stylesheet" href="random-genre.css" />
+  <link rel="stylesheet" href="auth-gate.css">
+</head>
+<body>
+
+  <main class="panel">
+    <h1>🎬 Tür Seçici 🎬</h1>
+    <button type="button" onclick="selectGenre()">Seç Balım</button>
+    <p id="result">Bekliyorummm</p>
+  </main>
+
+  <script>
+    const subGenres = [
+      "Action", "Comedy", "Drama", "Sci-Fi", "Romance", "Horror", "Thriller",
+      "Animation", "Documentary", "Adventure", "Crime", "Fantasy", "Mystery",
+      "Family", "Musical", "War", "Western", "Biography", "History", "Sport"
+    ];
+
+    function selectGenre() {
+      const randomIndex = Math.floor(Math.random() * subGenres.length);
+      const genre = subGenres[randomIndex];
+      document.getElementById("result").innerText = "İzleyeceğimiz Tür: " + genre;
+    }
+  </script>
+  <script src="auth-gate.js" defer></script>
+</body>
+</html>

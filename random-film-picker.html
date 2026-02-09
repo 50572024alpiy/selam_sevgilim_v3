@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Random Movie Picker</title>
+  <link rel="stylesheet" href="random-movie.css" />
+  <link rel="stylesheet" href="auth-gate.css">
+</head>
+<body>
+
+  <header>
+    <h1>🎬 Film Seçici 🎬</h1>
+    <p>Listeyi yükle sevgilim</p>
+  </header>
+
+  <main class="panel">
+    <input type="file" id="fileInput" accept=".txt" />
+    <button type="button" onclick="pickRandomFilm()">Seç balım</button>
+    <p id="result">Seçmeni Bekliyorum Sevgilimmm</p>
+  </main>
+
+  <footer>
+    <p>Made with ❤️ for u</p>
+  </footer>
+
+  <script>
+    let filmList = [];
+
+    document.getElementById("fileInput").addEventListener("change", function (event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        filmList = e.target.result
+          .split(/\r?\n/)
+          .map(line => line.trim())
+          .filter(line => line !== "");
+        alert(filmList.length + " film arasından seçilecek");
+      };
+      reader.readAsText(file, "UTF-8");
+    });
+
+    function pickRandomFilm() {
+      const resultEl = document.getElementById("result");
+      if (filmList.length === 0) {
+        resultEl.innerText = "Film listesi boş balım .txt dosyası yükle.";
+        return;
+      }
+      const randomIndex = Math.floor(Math.random() * filmList.length);
+      const selectedFilm = filmList[randomIndex];
+      resultEl.innerText = `Seçilen film (${randomIndex + 1}/${filmList.length}): ${selectedFilm}`;
+    }
+  </script>
+  <script src="auth-gate.js" defer></script>
+</body>
+</html>

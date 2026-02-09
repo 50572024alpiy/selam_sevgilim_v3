@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Jukebox</title>
+  <link rel="stylesheet" href="jukebox.css" />
+  <link rel="stylesheet" href="auth-gate.css">
+</head>
+<body>
+  <main class="wrap">
+    <button class="back-btn" onclick="window.location.href='index.html'">
+      ← Ana sayfaya dön
+    </button>
+
+    <section class="hero">
+      <div class="disc" aria-hidden="true"><div class="hole"></div></div>
+
+      <header class="head">
+        <h1>Mixtape vol.2</h1>
+      </header>
+
+      <div class="disc" aria-hidden="true"><div class="hole"></div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner">
+        <div class="actions">
+          <button id="pickBtn" class="btn btn-accent" type="button">Şarkı Seç</button>
+        </div>
+
+        <div id="result" class="result" aria-live="polite">
+          <div class="placeholder">“Şarkı Seç” sevgilim</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="prev-box">
+          <div class="prev-title">Son Seçimler</div>
+          <div id="prevGrid" class="prev-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot"><span>Made for ❤️</span></footer>
+  </main>
+
+  <script>
+  (function(){
+    const TRACKS_RAW = [
+      "https://open.spotify.com/intl-tr/track/3xtiXNDbSKxy20I7D6vFUg?si=020eb424235d4028",
+      "https://open.spotify.com/intl-tr/track/6RiiSy9GzSwiyDEJDiMuKe?si=1ff36070a81e4e02",
+      "https://open.spotify.com/intl-tr/track/3jfZ9M23l0L7RxzYMTgBTv?si=019aeb49806048be",
+      "https://open.spotify.com/intl-tr/track/751srcHf5tUqcEa9pRCQwP?si=b64b6b54f72d46b4",
+      "https://open.spotify.com/intl-tr/track/2lwwrWVKdf3LR9lbbhnr6R?si=b7694fa50d2f4faa",
+      "https://open.spotify.com/intl-tr/track/3Yub3anoLj8w58TVpEXUJv?si=f786b90945e74cc1",
+      "https://open.spotify.com/intl-tr/track/5ruzrDWcT0vuJIOMW7gMnW?si=c3a86befad7b46c5",
+      "https://open.spotify.com/intl-tr/track/3VIJBrMpvimHEw5wtPh2wB?si=78ff28a5deca47aa",
+      "https://open.spotify.com/intl-tr/track/0UV5zxRMz6AO4ZwUOZNIKI?si=e4c21412a201425c",
+      "https://open.spotify.com/intl-tr/track/2AYEOC02WLhUiOoaig2SEH?si=ff2efbc756684cd5",
+      "https://open.spotify.com/intl-tr/track/75IQVo8hqI1iwVZyvkN2VT?si=669fdc864b4c409d",
+      "https://open.spotify.com/intl-tr/track/2R4AlwtrrkMaRKojcTIzmL?si=43428a8884634ff4",
+      "https://open.spotify.com/intl-tr/track/2Lumsra3kuU61wXkEKzKaK?si=782e4604ea8f4c93",
+      "https://open.spotify.com/intl-tr/track/0JIMT9gzLIIz0esKLyjbKf?si=50037259d2b641ef",
+      "https://open.spotify.com/intl-tr/track/7H7NyZ3G075GqPx2evsfeb?si=ab65c9ec665f4df9",
+      "https://open.spotify.com/intl-tr/track/4sebUbjqbcgDSwG6PbSGI0?si=e3bbfffef66d429d",
+      "https://open.spotify.com/intl-tr/track/7EAMXbLcL0qXmciM5SwMh2?si=3837e82ba32a4fdd",
+      "https://open.spotify.com/intl-tr/track/5QzPYn26g8EU2JiaG6bYV3?si=fe41732aae8d4cc0",
+      "https://open.spotify.com/intl-tr/track/7MlDNspYwfqnHxORufupwq?si=43ad356b00dc4e03",
+      "https://open.spotify.com/intl-tr/track/4SqWKzw0CbA05TGszDgMlc?si=a32dc56d83614928",
+      "https://open.spotify.com/intl-tr/track/4q283tKkBnz6OKcqZNVlmI?si=b01229c80bf04c81",
+      "https://open.spotify.com/intl-tr/track/1xK59OXxi2TAAAbmZK0kBL?si=0a3ae6fe9760444d",
+      "https://open.spotify.com/intl-tr/track/0WQiDwKJclirSYG9v5tayI?si=587ff8a02ced4840",
+      "https://open.spotify.com/intl-tr/track/6rY5FAWxCdAGllYEOZMbjW?si=151d20d95f82425a",
+      "https://open.spotify.com/intl-tr/track/2mOp5BSfbZrf4tunZ5mPit?si=b568c92a63e84529",
+      "https://open.spotify.com/intl-tr/track/27g0ztD0kKcDJRrIFDl8q8?si=e21835f9809e4edc",
+      "https://open.spotify.com/intl-tr/track/43iIQbw5hx986dUEZbr3eN?si=509778286fd5458c",
+      "https://open.spotify.com/intl-tr/track/1XrSjpNe49IiygZfzb74pk?si=512feac36a7a4e88",
+      "https://open.spotify.com/intl-tr/track/56eSclzdXaWU5jOJ7DX7Vp?si=b3a879f3a45c48fb",
+      "https://open.spotify.com/intl-tr/track/7DcJ6fEBb7BaKuYKTwiDxK?si=97eee001e92c466f",
+      "https://open.spotify.com/intl-tr/track/5TuTHrKzN6NweeQaKkBNb7?si=86c900cfcd5a4638",
+      "https://open.spotify.com/intl-tr/track/4KGGeE7RJsgLNZmnxGFlOj?si=415701ba5acb4c9f",
+      "https://open.spotify.com/intl-tr/track/4z9KVNX4hmk672SJfhtQNz?si=b2df7981d12c45ef",
+      "https://open.spotify.com/intl-tr/track/4sNG6zQBmtq7M8aeeKJRMQ?si=2335530e365e4654",
+      "https://open.spotify.com/intl-tr/track/1IqF5PUDUnaykHLs0RWbDO?si=1eb498f4b5f0408e",
+      "https://open.spotify.com/intl-tr/track/06iuzVAiyOTXKJDZiVuPW4?si=b09cd933d5794470",
+      "https://open.spotify.com/intl-tr/track/7aQjPecQdIuNd1sz3KCDhD?si=a67ac5e3db234cba",
+      "https://open.spotify.com/intl-tr/track/0rVJ6v23RQozOIvr1YotJP?si=d541261a385b46b5",
+      "https://open.spotify.com/intl-tr/track/3iBgrkexCzVuPy4O9vx7Mf?si=17a3b35165284d5d",
+      "https://open.spotify.com/intl-tr/track/25WBAqR5bcRrs1du9L6AeC?si=71bfdd6cf43d455a",
+      "https://open.spotify.com/intl-tr/track/5Qnrgqy1pAm9GyNQOgyVFz?si=1391d671622c4714",
+      "https://open.spotify.com/intl-tr/track/21IYMdzTrzSe191Cy5eMap?si=0e881b2638e74c37",
+      "https://open.spotify.com/intl-tr/track/6me7F0aaZjwDo6RJ5MrfBD?si=a8369534d3eb49af",
+      "https://open.spotify.com/intl-tr/track/79EkGysjP2dL5GdpeQjRxT?si=51f40e16bc8f4c0b",
+      "https://open.spotify.com/intl-tr/track/07MDkzWARZaLEdKxo6yArG?si=863b8cf0ac5346da",
+      "https://open.spotify.com/intl-tr/track/5MeUMSRreLHYLhw8ZTyqpk?si=443a15de106d4478",
+      "https://open.spotify.com/intl-tr/track/6G9YlbU3ByPJQvOFDRdwyM?si=7c4752272b1b45ca",
+      "https://open.spotify.com/intl-tr/track/1PqiPSxaMyH0EaV5fu2KQy?si=3ea4094a370d4c09",
+      "https://open.spotify.com/intl-tr/track/1Vrj9Vcbb0lOG94pQbYvzv?si=7d402642c5074ca5",
+      "https://open.spotify.com/intl-tr/track/6b37xrsNCWYIUphFBazqD6?si=958e485a13d84b52",
+    ];
+
+    const EMBED_HEIGHT_MAIN = 352;
+    const EMBED_HEIGHT_PREV = 152;
+
+    const $  = (s, el=document) => el.querySelector(s);
+
+    const pickBtn   = $('#pickBtn');
+    const resultBox = $('#result');
+    const prevGrid  = $('#prevGrid');
+
+    function normalizeId(s){
+      if(!s) return "";
+      s = s.trim();
+      let m;
+      m = s.match(/spotify:track:([0-9A-Za-z]{22})/i); if(m) return m[1];
+      m = s.match(/open\.spotify\.com\/(?:intl-[a-z-]+\/)?track\/([0-9A-Za-z]{22})/i); if(m) return m[1];
+      m = s.match(/^([0-9A-Za-z]{22})$/); if(m) return m[1];
+      return "";
+    }
+    const TRACKS = TRACKS_RAW.map(normalizeId).filter(Boolean);
+
+    function shuffle(a){
+      const arr = [...a];
+      for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
+      }
+      return arr;
+    }
+    let bag = shuffle(TRACKS);
+    let idx = 0;
+
+    function embedHTML(id, h){
+      return `<iframe
+        src="https://open.spotify.com/embed/track/${id}?utm_source=generator"
+        width="100%" height="${h}" frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>`;
+    }
+
+    function setMain(id){
+      resultBox.innerHTML = `<div class="embed-main">${embedHTML(id, EMBED_HEIGHT_MAIN)}</div>`;
+    }
+
+    let currentMain = null;
+    const prevTwo = [];
+
+    function renderHistory(){
+      const items = prevTwo.slice(-2);
+      prevGrid.innerHTML = items.map(x =>
+        `<div class="prev-card">${embedHTML(x, EMBED_HEIGHT_PREV)}</div>`
+      ).join("");
+    }
+
+    function pick(){
+      if(!bag.length) return;
+      const nextId = bag[idx];
+
+      if (currentMain) {
+        prevTwo.push(currentMain);
+        if (prevTwo.length > 2) prevTwo.shift();
+        renderHistory();
+      }
+
+      setMain(nextId);
+      currentMain = nextId;
+
+      idx++;
+      if (idx >= bag.length) { bag = shuffle(TRACKS); idx = 0; }
+    }
+
+    pickBtn.addEventListener('click', pick);
+    document.addEventListener('keydown', (e)=>{
+      if(e.code === 'Space'){ e.preventDefault(); pick(); }
+    });
+  })();
+  </script>
+</body>
+</html>

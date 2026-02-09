@@ -1,0 +1,151 @@
+:root{
+  color-scheme: dark;
+
+  --bg-start: 8 12 14;
+  --bg-end:   14 18 22;
+
+  --primary:   139 92 246;   
+  --primary-2: 74 222 170;   
+  --ui-mint:   var(--primary-2);
+  --ring:      var(--primary);
+
+  --glass: 18 24 28 / 0.58;
+  --shadow-md: 0 10px 22px rgba(0,0,0,.35), 0 3px 10px rgba(0,0,0,.2);
+  --shadow-lg: 0 24px 44px rgba(0,0,0,.45), 0 10px 22px rgba(0,0,0,.28);
+
+  --radius-xl: 28px;
+  --blur: 14px;
+  --fs-hero: clamp(28px, 3.5vw, 44px);
+  --fs-sub:  clamp(14px, 1.35vw, 18px);
+  --fs-body: 16px;
+  --font-display: "Poppins", "Plus Jakarta Sans",
+                  ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+                  "SF Pro Text","Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:var(--font-display);
+  font-size:var(--fs-body);
+  line-height:1.6;
+  color:rgb(var(--ui-mint)); 
+  min-height:100svh;
+  background:
+    radial-gradient(1200px 800px at 10% -10%, rgba(var(--primary), .10), transparent 50%),
+    radial-gradient(1400px 900px at 110% 20%, rgba(var(--primary-2), .12), transparent 55%),
+    linear-gradient(180deg, rgb(var(--bg-start)) 0%, rgb(var(--bg-end)) 100%);
+}
+
+header, main.panel, footer { width: min(900px, 92%); margin-inline: auto; }
+
+header{
+  text-align:center;
+  padding: clamp(18px, 3vw, 36px) 0 8px;
+}
+header h1{
+  margin:0 0 6px;
+  font-size:var(--fs-hero);
+  letter-spacing:-.02em;
+  line-height:1.15;
+  color:rgb(var(--ui-mint));
+  text-shadow:0 8px 40px rgb(var(--ui-mint) / .22);
+}
+header p{ margin:0; font-size:var(--fs-sub); color:inherit; opacity:.95; }
+
+.panel{
+  text-align:center;
+  background: linear-gradient(180deg, rgba(var(--glass)) 0%, rgba(var(--glass)) 100%);
+  backdrop-filter: saturate(140%) blur(var(--blur));
+  -webkit-backdrop-filter: saturate(140%) blur(var(--blur));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-md);
+  padding: clamp(22px, 3vw, 32px);
+  margin: 10px auto 24px;
+}
+
+.panel > * { margin-inline:auto; }
+
+input[type="file"]{
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.25);
+  color: rgb(var(--ui-mint));
+  font-weight:500;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  max-width:100%;
+}
+
+input[type="file"]::-webkit-file-upload-button{
+  appearance:none;
+  border:0;
+  border-radius:999px;
+  padding:10px 14px;
+  margin-right:12px;
+  background:linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--primary-2)) 100%);
+  color:#0b1114;
+  font-weight:600;
+  cursor:pointer;
+}
+input[type="file"]::file-selector-button{
+  appearance:none;
+  border:0;
+  border-radius:999px;
+  padding:10px 14px;
+  margin-right:12px;
+  background:linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--primary-2)) 100%);
+  color:#0b1114;
+  font-weight:600;
+  cursor:pointer;
+}
+
+button{
+  appearance:none;
+  border:0;
+  cursor:pointer;
+  border-radius:999px;
+  padding:14px 22px;
+  font-weight:600;
+  font-size:16px;
+  letter-spacing:.2px;
+  background:linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--primary-2)) 100%);
+  color:#0b1114;
+  box-shadow:0 12px 26px rgba(0,0,0,.35), 0 6px 16px rgba(0,0,0,.25);
+  transition:transform .2s ease, box-shadow .3s ease, filter .3s ease;
+  margin-left:14px;
+}
+button:hover{ transform:translateY(-2px); filter:brightness(1.05); box-shadow:var(--shadow-lg); }
+button:active{ transform:translateY(0); }
+button:focus-visible{
+  outline:none;
+  box-shadow:
+    0 0 0 5px rgba(255,255,255,.25),
+    0 0 0 9px rgba(var(--ring), .7);
+}
+
+#result{
+  margin-top:24px;
+  font-size:clamp(18px, 2vw, 22px);
+  font-weight:600;
+  color:rgb(var(--ui-mint));
+  text-shadow:0 2px 12px rgb(var(--ui-mint) / 0.25);
+  opacity:.96;
+}
+
+footer{
+  text-align:center;
+  color:rgb(var(--ui-mint));
+  font-size:14px;
+  padding: 0 0 24px;
+}
+footer p{ margin:6px 0; }
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important; animation:none !important;}
+}
