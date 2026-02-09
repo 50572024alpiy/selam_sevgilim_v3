@@ -41,7 +41,7 @@
     }
 
     .panel {
-      width: min(980px, 100%);
+      width: min(1200px, 100%);
       border-radius: var(--radius);
       border: 1px solid var(--stroke);
       background: linear-gradient(180deg, var(--glass1), var(--glass2));
@@ -155,7 +155,7 @@
       }
 
       body {
-        padding: 10px;
+        padding: 6px;
         align-items: flex-start;
       }
 
@@ -199,8 +199,8 @@
       }
 
       .btn {
-        padding: 8px 10px;
-        font-size: 12px;
+        padding: 10px 14px;
+        font-size: 13px;
       }
 
       .stat .v {
@@ -236,7 +236,7 @@
 
     canvas {
       width: 100%;
-      height: clamp(320px, 46vw, 520px);
+      height: clamp(400px, 60vw, 680px);
       display: block;
       border-radius: 16px;
       background:
@@ -361,7 +361,7 @@
     const GOOD_EMOJIS = ["💖", "💘", "💝", "🌹", "🎀", "💌", "✨", "💎", "🍓", "🧸"];
 
     let dpr = Math.max(1, window.devicePixelRatio || 1);
-    let W = 800, H = 460;
+    let W = 1000, H = 600;
 
     const player = {
       x: 200,
@@ -430,7 +430,7 @@
       canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      player.y = H - 78;
+      player.y = H - 90;
       player.x = clamp(player.x, player.r + 12, W - player.r - 12);
     }
 
@@ -448,7 +448,7 @@
       gameOver = false;
 
       player.x = W / 2;
-      player.y = H - 78;
+      player.y = H - 90;
 
       scoreEl.textContent = "0";
       levelEl.textContent = "1";
