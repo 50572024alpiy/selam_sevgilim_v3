@@ -152,6 +152,59 @@
       .stats {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      body {
+        padding: 10px;
+        align-items: flex-start;
+      }
+
+      .panel {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 12px;
+      }
+
+      .gameShell {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        background: transparent;
+        border: none;
+      }
+
+      canvas {
+        flex: 1;
+        height: auto !important;
+        max-height: none;
+        min-height: 0;
+        border-radius: 12px;
+        width: 100%;
+      }
+
+      header {
+        padding: 14px 14px 10px;
+      }
+
+      .title h1 {
+        font-size: 16px;
+      }
+
+      .btn {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .stat .v {
+        font-size: 14px;
+      }
     }
 
     .stat {
@@ -352,7 +405,7 @@
       jumpV: 860
     };
 
-    let platforms = []; 
+    let platforms = [];
     let highestPlatY = 0;
 
     let left = false, right = false;
@@ -367,6 +420,12 @@
 
       W = Math.max(320, rect.width);
       H = Math.max(280, rect.height);
+
+      // On mobile, let CSS control the size more directly
+      if (window.innerWidth <= 660) {
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+      }
 
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
