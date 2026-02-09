@@ -169,5 +169,9 @@ body {
         /* Scale down to 60% of original size */
         flex-shrink: 0;
         /* Prevent flexbox from squashing the width causing floats to wrap */
+        width: 460px;
+        min-width: 460px;
+        /* Force width to stay 460px even if screen is smaller */
+        transform-origin: center center;
     }
 }
