@@ -4,11 +4,14 @@
 <head>
     <title>Bubble</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         html,
         body {
             height: 100%;
             margin: 0;
+            overflow: hidden;
+            /* Prevent scrolling while playing */
         }
 
         body {
@@ -19,6 +22,23 @@
             flex-direction: column;
             color: white;
             font-family: sans-serif;
+            touch-action: none;
+        }
+
+        #game {
+            max-width: 100%;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            border: 2px solid #333;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 600px) {
+            #game {
+                width: 95%;
+                height: auto;
+            }
         }
 
         .nav-btn {
