@@ -25,6 +25,7 @@
     cursor: pointer;
     transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease;
     user-select: none;
+    box-sizing: border-box;
 
     transform: translateY(calc(var(--i) * 2px));
     transform-origin: bottom center;
