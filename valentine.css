@@ -41,6 +41,8 @@ body {
     width: 260px;
     height: 260px;
     float: left;
+    position: relative;
+    z-index: 2;
 }
 
 #card .heart #circle {
