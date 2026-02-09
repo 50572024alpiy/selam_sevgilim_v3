@@ -180,7 +180,7 @@ body {
     position: absolute;
     left: 24px;
     top: 24px;
-    z-index: 20;
+    z-index: 1001;
     transition: transform 0.2s;
 }
 
