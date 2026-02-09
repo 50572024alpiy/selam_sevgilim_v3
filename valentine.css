@@ -167,7 +167,7 @@ body {
     #card {
         transform: scale(0.6);
         /* Scale down to 60% of original size */
-        margin-left: -30px;
-        /* Adjust centering if needed due to transform origin */
+        flex-shrink: 0;
+        /* Prevent flexbox from squashing the width causing floats to wrap */
     }
 }
