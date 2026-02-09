@@ -114,8 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
         playTrack(prevIndex);
     }
 
+    const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+    const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+
     function updateUI() {
-        if (playBtn) playBtn.textContent = isPlaying ? "⏸" : "▶";
+        if (playBtn) {
+            playBtn.innerHTML = isPlaying ? pauseIcon : playIcon;
+            playBtn.style.paddingLeft = isPlaying ? '0' : '4px'; // Visual centering for play icon
+        }
         if (trackStatus) trackStatus.textContent = isPlaying ? "Playing" : "Paused";
 
         if (musicToggleImg) {

@@ -108,7 +108,6 @@
     background: none;
     border: none;
     color: rgba(255, 255, 255, 0.8);
-    font-size: 24px;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -117,7 +116,6 @@
 }
 
 .play-btn {
-    font-size: 36px;
     width: 56px;
     height: 56px;
     background: rgba(255, 255, 255, 0.1);
@@ -133,6 +131,12 @@
 
 .play-btn:hover {
     background: rgba(255, 255, 255, 0.2);
+}
+
+.control-btn svg,
+.play-btn svg {
+    pointer-events: none;
+    /* Ensure clicks register on the button */
 }
 
 .track-info {
