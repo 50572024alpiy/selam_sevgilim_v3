@@ -22,27 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
         { title: "2. İroş", file: "songs/iro1.mp3" },
         { title: "3. ocak", file: "songs/yazılanlar v3.mp3" },
         { title: "4. indie v1", file: "songs/1.mp3" },
-        { title: "5. indie v2", file: "songs/2.mp3" },
-        { title: "6. summer house v1", file: "songs/summer v1-1.mp3" },
-        { title: "7. summer house v2", file: "songs/summer v1-2.mp3" },
-        { title: "8. summer house v3", file: "songs/summer v2-1.mp3" },
-        { title: "9. summer house v4", file: "songs/summer v2-2.mp3" },
-        { title: "10. summer house v5", file: "songs/summer v3-1.mp3" },
-        { title: "11. summer house v6", file: "songs/summer v3-2.mp3" },
-        { title: "12. truly yours", file: "songs/yours v1-1.mp3" },
-        { title: "13. yours", file: "songs/yours v1-2.mp3" },
-        { title: "14. ch v1", file: "songs/ch1-1.mp3" },
-        { title: "15. ch v2", file: "songs/ch1-2.mp3" },
-        { title: "16. ch v3", file: "songs/ch2-1.mp3" },
-        { title: "17. ch v4", file: "songs/ch2-2.mp3" },
-        { title: "18. flawed", file: "songs/mango1-1.mp3" },
-        { title: "19. mangoes", file: "songs/mango1-2.mp3" },
-        { title: "20. ant v1", file: "songs/ant1-1.mp3" },
-        { title: "21. ant v2", file: "songs/ant1-2.mp3" },
-        { title: "22. cabbar", file: "songs/jbbr1.mp3" },
-        { title: "23. dafty", file: "songs/dp1-1.mp3" },
-        { title: "24. punky", file: "songs/dp1-2.mp3" },
-        { title: "25. İroş - acoustic", file: "songs/acous1-1.mp3" },
+        { title: "5. summer house v6", file: "songs/summer v3-2.mp3" },
+        { title: "6. truly yours", file: "songs/yours v1-1.mp3" },
+        { title: "7. ch v2", file: "songs/ch1-2.mp3" },
+        { title: "8. flawed", file: "songs/mango1-1.mp3" },
+        { title: "9. mangoes", file: "songs/mango1-2.mp3" },
+        { title: "10. ant v2", file: "songs/ant1-2.mp3" },
+        { title: "11. cabbar", file: "songs/jbbr1.mp3" },
+        { title: "12. dafty", file: "songs/dp1-1.mp3" },
+        { title: "13. İroş - acoustic", file: "songs/acous1-1.mp3" },
         //songs 
     ];
 
@@ -120,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateUI() {
         if (playBtn) {
             playBtn.innerHTML = isPlaying ? pauseIcon : playIcon;
-            playBtn.style.paddingLeft = isPlaying ? '0' : '4px'; // Visual centering for play icon
+            playBtn.style.paddingLeft = isPlaying ? '0' : '4px'; 
         }
         if (trackStatus) trackStatus.textContent = isPlaying ? "Playing" : "Paused";
 
