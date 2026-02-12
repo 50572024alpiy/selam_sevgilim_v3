@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
         { title: "1. epilogue", file: "songs/analog.mp3" },
         { title: "2. İroş", file: "songs/iro1.mp3" },
         { title: "3. ocak", file: "songs/yazılanlar v3.mp3" },
-        { title: "4. indie v1", file: "songs/1.mp3" },
-        { title: "5. summer house v6", file: "songs/summer v3-2.mp3" },
+        { title: "4. indie", file: "songs/1.mp3" },
+        { title: "5. summer house", file: "songs/summer v3-2.mp3" },
         { title: "6. truly yours", file: "songs/yours v1-1.mp3" },
-        { title: "7. ch v2", file: "songs/ch1-2.mp3" },
+        { title: "7. ch", file: "songs/ch1-2.mp3" },
         { title: "8. flawed", file: "songs/mango1-1.mp3" },
         { title: "9. mangoes", file: "songs/mango1-2.mp3" },
-        { title: "10. ant v2", file: "songs/ant1-2.mp3" },
+        { title: "10. ant", file: "songs/ant1-2.mp3" },
         { title: "11. cabbar", file: "songs/jbbr1.mp3" },
         { title: "12. dafty", file: "songs/dp1-1.mp3" },
         { title: "13. İroş - acoustic", file: "songs/acous1-1.mp3" },
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateUI() {
         if (playBtn) {
             playBtn.innerHTML = isPlaying ? pauseIcon : playIcon;
-            playBtn.style.paddingLeft = isPlaying ? '0' : '4px'; 
+            playBtn.style.paddingLeft = isPlaying ? '0' : '4px';
         }
         if (trackStatus) trackStatus.textContent = isPlaying ? "Playing" : "Paused";
 
