@@ -25,6 +25,7 @@
         right: 0;
         top: 0;
         height: 100vh;
+        height: 100dvh;
     }
 }
 
@@ -247,6 +248,7 @@ input[type=range]#volumeSlider::-webkit-slider-thumb {
     max-height: none;
 
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 80px;
 }
 
 .playlist::-webkit-scrollbar {
